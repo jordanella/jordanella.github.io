@@ -32,3 +32,7 @@ button#gowebcam.gowebcam {
 #chatbutton,#mutebutton,#mutevideobutton,#screensharebutton,#screensharebutton2,#settingsbutton,#hangupbutton {
     background-color: #2a27da;
 }
+
+card {
+	background-color: #e7e7e7;
+}
