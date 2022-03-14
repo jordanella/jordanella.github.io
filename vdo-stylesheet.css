@@ -33,6 +33,6 @@ button#gowebcam.gowebcam {
     background-color: #2a27da;
 }
 
-span.video-label {
+#helpbutton,#translateButton {
 	visibility: hidden;
 }
