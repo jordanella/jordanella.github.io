@@ -1,0 +1,34 @@
+body {
+	background-image: linear-gradient(to bottom right, #214ce2, #02c8fe);
+}
+
+
+div#header {
+	min-height: 40px;
+	padding-top:10px;
+	background-color: #2a27da;
+}
+
+a#logoname span {
+    display:none;
+}
+
+a#logoname:after {
+    content: "siberXchange Broadcast";
+    margin-right: 15px;
+    margin-left: 15px;
+	font-weight: bold;
+}
+
+button#gowebcam.gowebcam {
+	color: #ffffff;
+	background-color: #2a27da !important;
+}
+
+#subcontrolbuttons {
+    background-color: #e7e7e7;
+}
+
+#chatbutton,#mutebutton,#mutevideobutton,#screensharebutton,#screensharebutton2,#settingsbutton,#hangupbutton {
+    background-color: #2a27da;
+}
