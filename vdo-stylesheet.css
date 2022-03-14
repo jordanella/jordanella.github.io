@@ -33,6 +33,6 @@ button#gowebcam.gowebcam {
     background-color: #2a27da;
 }
 
-.video-label {
+span.video-label {
 	visibility: hidden;
 }
