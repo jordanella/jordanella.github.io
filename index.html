@@ -29,8 +29,7 @@
 
 <body>
 <div id="information" style="position: absolute; bottom:20px; opacity: 50%;"> </div>
-<div>
-<div id="banner"></div>
+<div><div id="banner"></div>
 <div id="button-container" style="height: 550px;">
 <ul class="wrapper">
   <li class="icon facebook" id="button2">
@@ -40,7 +39,7 @@
   </ul>
 </div>
   <div id="qrcode-scanner" style="display: none; padding-top: 20px; height: 550px;">
-    <div name="pane-webcam" style="display: none; border-radius: 20px">
+    <div name="pane-webcam" style="display: none; border-radius: 20px; height: 550px;">
       <video name="video" autoplay style="border-radius: 20px;"></video>
       <canvas name="canvas" style="display: none;"></canvas>
     </div>
@@ -102,7 +101,7 @@
       var security = url.searchParams.get('security_code');
       var ticket_id = url.searchParams.get('ticket_id');
       
-      startProcess(security_code, ticket_id);
+      startProcess(security, ticket_id);
       console.log("security_code: ", security, ", ticker_id: ", ticket_id);
       // console.log("QRCodeScanner dataURL:", result.data);
       x.style.display = "inline-flex";
