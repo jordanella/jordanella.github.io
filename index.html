@@ -61,11 +61,14 @@
         url: "http://3.99.74.9/generate-lead",
         type: "POST",
         crossDomain: true,
-        dataType: 'json',
         data: {
           uid: "12qwe12r3", //security_code
           vendorID: "pwc" //vendor_id
         },
+        headers: {
+          accept: "application/json",
+          Access-Control-Allow-Origin: "*"
+        }
         success: function(data) {
           toastPopup('The scanned QR code was successfully processed.','success');
         },
