@@ -60,7 +60,8 @@
       $.ajax({
         url: "http://3.99.74.9/generate-lead",
         type: "POST",
-        contentType: "application/json",
+        crossDomain: true,
+        dataType: 'json',
         data: {
           uid: "12qwe12r3", //security_code
           vendorID: "pwc" //vendor_id
