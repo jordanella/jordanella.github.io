@@ -30,33 +30,24 @@
 <body>
 <div id="information" style="position: absolute; bottom:20px; opacity: 50%;"> </div>
 <div><div id="banner"></div>
-<div id="button-container" style="height: 550px;">
-<ul class="wrapper">
-  <li class="icon facebook" id="button2">
-    <span style="align-items: center;" class="tooltip">Scan QRCode</span>
-    <span><i class="fab fa-facebook-f"></i><img src="1200px-QR_icon.svg.png" class="qr" /></span>
-  </li>
-  </ul>
-</div>
-  <div id="qrcode-scanner" style="display: none; padding-top: 20px; height: 550px;">
-    <div name="pane-webcam" style="display: none; border-radius: 20px; height: 550px;">
+  <div id="button-container" style="height: 800px;">
+    <ul class="wrapper">
+      <li class="icon facebook" id="button2">
+        <span style="align-items: center;" class="tooltip">Scan QRCode</span>
+        <span><i class="fab fa-facebook-f"></i><img src="1200px-QR_icon.svg.png" class="qr" /></span>
+      </li>
+    </ul>
+  </div>
+  <div id="qrcode-scanner" style="display: none; padding-top: 20px; height: 800px;">
+    <div name="pane-webcam" style="display: none; border-radius: 20px; height: 800px;">
       <video name="video" autoplay style="border-radius: 20px;"></video>
       <canvas name="canvas" style="display: none;"></canvas>
     </div>
     <div>
       <span name="lbl-processing" style="background: navy; color: white; padding: 4px; min-width:100%; font-weight: bold; display: none;">Processing ...</span>
     </div>
-    <div>
-    </div>
-
-    <div class="video-options">
-        <select name="" id="" class="custom-select">
-            <option value="">Select camera</option>
-        </select>
-    </div>
-
   </div>
-
+</div>
   <script type="text/javascript">
     const this_url = new URL(window.location.href);
     var vendor_id = this_url.searchParams.get('vendorID');
@@ -108,7 +99,6 @@
       });
     });
   </script>
-  </div>
-</body>
 
+</body>
 </html>
