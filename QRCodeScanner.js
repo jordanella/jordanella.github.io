@@ -194,10 +194,14 @@ class QRCodeScanner {
 
   /** open the webcam pane and start to scan */
   startWebcam(e) {
+	  
+	const cameraOptions = document.querySelector('.video-options>select');
+
     const self = this;
     self._togglePane("webcam");
     self.webcamStopped = false;
     // open webcam device
+	
     navigator.mediaDevices.getUserMedia({
       audio: false,
       video: true
