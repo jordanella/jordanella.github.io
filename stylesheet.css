@@ -1,0 +1,250 @@
+/*
+    Auther: Abdelrhman Said
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+#banner {
+	background-image: url('wic banner.png');
+	background-size: contain;
+	width: 700px;
+	height: 163px;
+	background-repeat: no-repeat;
+	border-radius: 20px;
+	box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+	margin:0px;
+	padding:0px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*:focus,
+*:active {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.qr {
+	margin-top: 8px;
+	margin-left: 3px;
+	width: 90px;
+	height: 90px;
+	opacity: 50%;
+}
+
+.qr:hover {
+	filter: brightness(150%);
+}
+
+html,
+body {
+  display: grid;
+  height: 100%;
+  width: 100%;
+  font-family: "Poppins", sans-serif;
+  place-items: center;
+  background: linear-gradient(315deg, #ffffff, #d7e1ec);
+}
+
+.wrapper {
+  display: inline-flex;
+  list-style: none;
+  margin-left: 255px;
+  margin-top: 100px;
+}
+
+.wrapper .icon {
+  position: relative;
+  background: #ffffff;
+  border-radius: 50%;
+  padding: 15px;
+  margin: 10px;
+  width: 150px;
+  height: 150px;
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.wrapper .tooltip {
+  position: absolute;
+  top: 0;
+  font-size: 14px;
+  background: #ffffff;
+  color: #ffffff;
+  padding: 5px 8px;
+  width: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.wrapper .tooltip::before {
+  position: absolute;
+  content: "";
+  height: 8px;
+  width: 8px;
+  background: #ffffff;
+  bottom: -3px;
+  left: 50%;
+  transform: translate(-50%) rotate(45deg);
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.wrapper .icon:hover .tooltip {
+  top: -45px;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.wrapper .icon:hover span,
+.wrapper .icon:hover .tooltip {
+  text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.1);
+}
+
+.wrapper .facebook:hover,
+.wrapper .facebook:hover .tooltip,
+.wrapper .facebook:hover .tooltip::before {
+  background: #871687;
+  color: #ffffff;
+}
+
+.wrapper .twitter:hover,
+.wrapper .twitter:hover .tooltip,
+.wrapper .twitter:hover .tooltip::before {
+  background: #1DA1F2;
+  color: #ffffff;
+}
+
+.wrapper .instagram:hover,
+.wrapper .instagram:hover .tooltip,
+.wrapper .instagram:hover .tooltip::before {
+  background: #E4405F;
+  color: #ffffff;
+}
+
+.wrapper .github:hover,
+.wrapper .github:hover .tooltip,
+.wrapper .github:hover .tooltip::before {
+  background: #333333;
+  color: #ffffff;
+}
+
+.wrapper .youtube:hover,
+.wrapper .youtube:hover .tooltip,
+.wrapper .youtube:hover .tooltip::before {
+  background: #CD201F;
+  color: #ffffff;
+}
+
+// TOASTS
+
+* {
+	box-sizing: border-box;
+}
+
+#toastStack {
+	position: fixed;
+	top: 3vh;
+	right: 3vw;
+	max-height: 94vh;
+	display: grid;
+	grid-template-columns: min(94vw, 300px);
+	gap: 0.5rem;
+	overflow-y: auto;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}
+
+.toast {
+	flex: 1;
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 1rem;
+	margin-bottom: 1rem;
+	margin-inline: 1rem;
+
+	border-width: 1px;
+	border-style: solid;
+	border-radius: 0.25rem;
+
+	color: rgb(248 249 250);;
+	font-weight: 300;
+
+	animation: fadeIn 0.5s;
+	
+	&:first-of-type {
+		margin-block-start: 1rem;
+	}
+	&:last-of-type {
+		margin-block-end: 1rem;
+	}
+}
+.toast__close {
+		border: none;
+		cursor: pointer;
+		background-color: transparent;
+		color: rgb(248 249 250);
+	}
+.toast--success {
+		border-color: rgb(40 167 69 / 90%);
+		background-color: rgb(40 167 69 / 90%);
+		box-shadow: rgba(99, 99, 99, 0.6) 0px 2px 8px 0px;
+		&:hover {
+			border-color: rgb(40 167 69);
+			background-color: rgb(40 167 69);
+		}
+	}
+	
+.toast--danger {
+		border-color: rgb(220 53 69 / 90%);
+		background-color: rgb(220 53 69 / 90%);
+		box-shadow: rgba(99, 99, 99, 0.6) 0px 2px 8px 0px;
+		&:hover {
+			border-color: rgb(220 53 69);
+			background-color: rgb(220 53 69);
+		}
+	}
+	
+.toast--hide {
+		animation: fadeOut 0.5s;
+	}
+}
+
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes fadeOut {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
