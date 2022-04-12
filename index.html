@@ -61,16 +61,24 @@
         url: "http://3.99.74.9/generate-lead",
         type: "POST",
         crossDomain: true,
-        data: {
-          uid: "12qwe12r3", //security_code
-          vendorID: "pwc" //vendor_id
-        },
+		dataType: "json",
+        data: JSON.stringify({
+		  tid: ticket_id,
+          uid: security, //security_code
+          vendorID: vendor_id //vendor_id
+        }),
         headers: {
-          accept: "application/json",
-          Access-Control-Allow-Origin: "*"
+          "accept": "application/json",
+          "Access-Control-Allow-Origin": "*"
         },
+		method: 'POST',
+		contentType: "application/json; charset=utf-8",
         success: function(data) {
-          toastPopup('The scanned QR code was successfully processed.','success');
+		  if (data.response == "Record not found") {
+			toastPopup('No record matching the scanned QR code could be found.','danger');
+		  } else {
+			toastPopup('The scanned QR code was successfully processed.','success');
+		  }
         },
         error: function (response) {
           toastPopup('There was a problem processing the scanned QR code.','danger');
@@ -93,7 +101,7 @@
       var ticket_id = url.searchParams.get('ticket_id');
       
       startProcess(security, ticket_id);
-      console.log("security_code: ", security, ", ticker_id: ", ticket_id);
+      console.log("security_code: ", security, ", ticket_id: ", ticket_id);
       // console.log("QRCodeScanner dataURL:", result.data);
       x.style.display = "inline-flex";
       });
