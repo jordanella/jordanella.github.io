@@ -210,7 +210,6 @@ class QRCodeScanner {
 	  }
 	
 	
-	
     navigator.mediaDevices.getUserMedia({
       audio: false,
       video: {
@@ -222,6 +221,8 @@ class QRCodeScanner {
 	  cam_holder.style.height = "";
       self.stream = stream;
       self.video.srcObject = stream;
+	  var video_holder = document.getElementById("cam_holder");    
+	  video_holder.setAttribute("playsinline", true);
       self.video.onloadedmetadata = function(e) {
         // Do something with the video here.
         self.video.play();
