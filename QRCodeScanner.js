@@ -271,8 +271,8 @@ class QRCodeScanner {
 		cam_holder.style.opacity = "0%";
 		cam_holder.style.height = "358px";
 		circ.style.opacity = "100%";
-		$('.circle-loader').toggleClass('load-complete');
-		$('.checkmark').toggle();
+		//$('.circle-loader').toggleClass('load-complete');
+		//$('.checkmark').toggle();
 		self.$lblProcessing.css("display", "none");
 	};
     return cb && cb(err, data);

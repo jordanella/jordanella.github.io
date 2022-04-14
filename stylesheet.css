@@ -16,6 +16,12 @@
 	padding:0px;
 }
 
+#status {
+	position: absolute;
+	opacity: 0px;
+	width: 100%;
+	top: 250px;
+}
 * {
   margin: 0;
   padding: 0;
@@ -46,6 +52,7 @@ body {
   height: 100%;
   width: 100%;
   font-family: "Poppins", sans-serif;
+  font-size: 18px;
   place-items: center;
   background: linear-gradient(315deg, #ffffff, #d7e1ec);
 }
@@ -69,7 +76,7 @@ body {
 	right: 3vw;
 	max-height: 94vh;
 	display: grid;
-	grid-template-columns: min(94vw, 300px);
+	grid-template-columns: min(94vw, 350px);
 	gap: 0.5rem;
 	overflow-y: auto;
 	-ms-overflow-style: none;
