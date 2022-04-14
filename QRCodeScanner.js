@@ -203,9 +203,19 @@ class QRCodeScanner {
     self.webcamStopped = false;
     // open webcam device
 	
+	  const supports = navigator.mediaDevices.getSupportedConstraints();
+	  if (!supports['facingMode']) {
+		alert('Browser Not supported!');
+		return;
+	  }
+	
+	
+	
     navigator.mediaDevices.getUserMedia({
       audio: false,
-      video: true
+      video: {
+		facingMode: 'environment',
+	  }
     }).then(function(stream) {
 	  circ.style.opacity = "0%";
 	  cam_holder.style.opacity = "100%";
