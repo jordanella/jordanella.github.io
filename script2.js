@@ -1,95 +1,79 @@
-const controls = document.querySelector('.controls');
-const cameraOptions = document.querySelector('.video-options>select');
-const video = document.querySelector('video');
-const canvas = document.querySelector('canvas');
-const screenshotImage = document.querySelector('img');
-const buttons = [...controls.querySelectorAll('button')];
-let streamStarted = false;
-
-const [play, pause, screenshot] = buttons;
-
-alert("s");
+const captureVideoButton =
+  document.querySelector('#screenshot .capture-button');
+const screenshotButton = document.querySelector('#screenshot-button');
+const img = document.querySelector('#screenshot img');
+const video = document.querySelector('#screenshot video');
+const enumerateMediaButton = document.querySelector('#screenshot .check-media')
+const canvas = document.createElement('canvas');
 
 const constraints = {
   video: {
-    width: {
-      min: 1280,
-      ideal: 1920,
-      max: 2560,
-    },
-    height: {
-      min: 720,
-      ideal: 1080,
-      max: 1440
-    },
+    // facingMode: {exact: "user"}, // options are ["environment", "user", "left", "right"]
+    width: {min: 100}, height: {min: 200} //Set either dimension to higher than 2000 to see dimension errors
   }
 };
 
-const getCameraSelection = async () => {
-  const devices = await navigator.mediaDevices.enumerateDevices();
-  const videoDevices = devices.filter(device => device.kind === 'videoinput');
-  const options = videoDevices.map(videoDevice => {
-    return `<option value="${videoDevice.deviceId}">${videoDevice.label}</option>`;
-  });
-  cameraOptions.innerHTML = options.join('');
-};
-
-play.onclick = () => {
-  if (streamStarted) {
-    video.play();
-    play.classList.add('d-none');
-    pause.classList.remove('d-none');
-    return;
-  }
-  if ('mediaDevices' in navigator && navigator.mediaDevices.getUserMedia) {
-    const updatedConstraints = {
-      ...constraints,
-      deviceId: {
-        exact: cameraOptions.value
-      }
-    };
-    startStream(updatedConstraints);
+const otherConstraints = {
+  video: {
+    facingMode: {exact: "environment"}, // options are ["environment", "user", "left", "right"]
+    width: {min: 100}, height: {min: 100} //Set either dimension to higher than 2000 to see dimension errors
   }
 };
 
-const startStream = async (constraints) => {
-  const stream = await navigator.mediaDevices.getUserMedia(constraints);
-  handleStream(stream);
-};
+function noCameraException(message) {
+ return {message, name: 'device id empty'}
+}
 
-const handleStream = (stream) => {
-  video.srcObject = stream;
-  play.classList.add('d-none');
-  pause.classList.remove('d-none');
-  screenshot.classList.remove('d-none');
-  streamStarted = true;
-};
+enumerateMediaButton.onclick = async () => {
+  navigator.mediaDevices.getUserMedia(constraints)
+    .then(async (stream) => {
+      devices = await navigator.mediaDevices.enumerateDevices()
+      const cameras = devices.filter(device => device.kind === 'videoinput')
+      // cameras.forEach(camera => console.log(camera.toJSON()))
+      document.getElementById('errorSpan').innerHTML = `Camera Count: ${cameras.length}`
+  })
+  .catch((e) => handleError(e))
+}
 
-getCameraSelection();
+captureVideoButton.onclick = () => {
+  navigator.mediaDevices.getUserMedia(constraints)
+    .then((stream) => handleSuccess())
+    .catch((e) => handleError(e))
+}
 
-cameraOptions.onchange = () => {
-  const updatedConstraints = {
-    ...constraints,
-    deviceId: {
-      exact: cameraOptions.value
-    }
-  };
-  startStream(updatedConstraints);
-};
+// const handleSecondCamera = () => {
+//   console.log('we were here')
+//    navigator.mediaDevices.getUserMedia(otherConstraints)
+//     .then((stream) => handleSuccess(stream))
+//     .catch((e) => handleError(e))
+// }
 
-const pauseStream = () => {
-  video.pause();
-  play.classList.remove('d-none');
-  pause.classList.add('d-none');
-};
-
-const doScreenshot = () => {
+screenshotButton.onclick = video.onclick = () => {
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
   canvas.getContext('2d').drawImage(video, 0, 0);
-  screenshotImage.src = canvas.toDataURL('image/webp');
-  screenshotImage.classList.remove('d-none');
+  // Other browsers will fall back to image/png
+  img.src = canvas.toDataURL('image/webp');
 };
 
-pause.onclick = pauseStream;
-screenshot.onclick = doScreenshot;
+const handleSuccess = (stream) => {
+  screenshotButton.disabled = false;
+  video.srcObject = stream;
+}
+
+const handleError = (e) => {
+  console.log(e)
+  let errorContainer = document.getElementById('errorSpan')
+  switch(e.constraint) {      
+    case "facingMode":
+      errorContainer.innerHTML = 'Only rear cameras are supported'
+      break;
+    case "width":
+    case "height":
+      errorContainer.innerHTML = 'The resolution of your camera is too low'
+      break;
+    default: 
+      errorContainer.innerHTML = 'An unknown error has occured'
+  }
+}
+

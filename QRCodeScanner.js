@@ -119,7 +119,7 @@ class QRCodeScanner {
     this.$root.on("click", "[name=close]", function() {
       self._finish(null);
 	  var x = document.getElementById("button-container");
-		x.style.display = "block";
+		x.style.display = "inline-flex";
     });
   }
 
@@ -141,7 +141,7 @@ class QRCodeScanner {
       self.$root.find("[name=btn-webcam]").hide();
       self.$root.find("[name=btn-file]").show();
     } else {
-      self.$paneWebcam.hide();
+      //self.$paneWebcam.hide();
       self.$paneFile.show();
       self.$root.find("[name=btn-webcam]").show();
       self.$root.find("[name=btn-file]").hide();
@@ -161,6 +161,7 @@ class QRCodeScanner {
   /** start to scan */
   scanFile(e) {
     const self = this;
+
     self.$lblProcessing.css("display", "inline-block");
     const $file = self.$root.find("input[name=file]");
     const file = $file[0].files[0];
@@ -194,8 +195,8 @@ class QRCodeScanner {
 
   /** open the webcam pane and start to scan */
   startWebcam(e) {
-	  
-	const cameraOptions = document.querySelector('.video-options>select');
+	var circ = document.getElementById("circ");
+	var cam_holder = document.getElementById("cam_holder");
 
     const self = this;
     self._togglePane("webcam");
@@ -206,6 +207,9 @@ class QRCodeScanner {
       audio: false,
       video: true
     }).then(function(stream) {
+	  circ.style.opacity = "0%";
+	  cam_holder.style.opacity = "100%";
+	  cam_holder.style.height = "";
       self.stream = stream;
       self.video.srcObject = stream;
       self.video.onloadedmetadata = function(e) {
@@ -250,10 +254,17 @@ class QRCodeScanner {
 
   /** `stop` function is always called on end of process. */
   _finish(data, cb, err) {
-    const self = this;
-    self._stopWebcam();
-    self.$root.hide();
-    self.$lblProcessing.css("display", "none");
+    if (data){
+		const self = this;
+		self._stopWebcam();
+		var cam_holder = document.getElementById("cam_holder");
+		cam_holder.style.opacity = "0%";
+		cam_holder.style.height = "358px";
+		circ.style.opacity = "100%";
+		$('.circle-loader').toggleClass('load-complete');
+		$('.checkmark').toggle();
+		self.$lblProcessing.css("display", "none");
+	};
     return cb && cb(err, data);
   }
 
