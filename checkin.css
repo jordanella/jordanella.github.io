@@ -1,0 +1,4 @@
+@media print {
+    .visible-print  { display: flex !important; }
+    .hidden-print   { display: none !important; }
+  }

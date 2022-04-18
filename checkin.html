@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,12 +9,17 @@
 
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="./checkin.css">
+    <link rel="stylesheet" type="text/css" media="print" href="./checkin.css">
     <script src="checkin.js"></script>
+
+    <!-- Generate QR -->
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 </head>
+
 <body>
 
     <!-- Navigation -->
@@ -34,19 +40,109 @@
     </nav>
 
     <!-- Content -->
-    <div class="container-fluid p-5">
+    <div class="container-fluid p-5 hidden-print">
         <h1 id="projectAnchor">Check-in</h1>
 
         <!-- Cards -->
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Card text</p>
+
+                <!-- Input -->
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Guest Lookup</span>
+                    </div>
+                    <input class="form-control" aria-label="With textarea" id="search-bar"></input>
+                    <button type="button" class="btn btn-primary" id="submit_button" style="margin-left:10px;">Scan QR Code</button>
+                </div>
+
+                <hr style="opacity: 0;" />
+
+                <!-- Table -->
+                <table class="table table-hover">
+                    <caption id="match_count">2</caption>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                    </tbody>
+                </table>
+
             </div>
+
         </div>
+
     </div>
 
+    <div class="d-flex justify-content-center visible-print" id="print-view" style="min-height: 100%; background-color: #777777;">
 
-    <footer class="container-fluid"></footer>
+        <!-- QR Code -->
+        <div id="qrcode" class="align-self-center"></div>
+
+    </div>
+
 </body>
+
+<script type="text/javascript">
+    
+    new QRCode(document.getElementById("qrcode"), "https://siberx.org");
+
+    var row_max_count = 3
+
+    function doFilter(value) {
+        
+        if (value == "") {
+            value = "Too many possibilities.";
+        }
+
+        $("#tbody tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+
+        var match_count = 0;
+
+        $("tbody tr").each(function() {
+            if ($(this).is(":hidden") == false){
+                match_count++;
+                if (match_count > row_max_count) {
+                    $(this).hide();
+                }
+            }
+        });
+
+        console.log(match_count);
+        
+        if(row_max_count < match_count) {
+            $('#match_count').html("Displaying " + (row_max_count) + " of " + match_count + " matches.");
+        } else if (match_count == 1) {
+            $('#match_count').html("Displaying 1 match.");
+        } else {
+            $('#match_count').html("Displaying " + match_count + " matches.");
+        }
+
+    }
+
+    fill_table();
+
+    $(document).ready(function() {
+        
+        doFilter($(this).val().toLowerCase());
+        
+        $("#search-bar").on("keyup", function() {
+            doFilter($(this).val().toLowerCase());
+        });
+
+    });
+
+</script> 
+
+<footer class="container-fluid">
+
+</footer>
+
 </html>
