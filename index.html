@@ -41,20 +41,20 @@
       <div class="modal-body">
 		  <div id="qrcode-scanner" style="display: none;">
 			
-			<div style="top: 0px; width: 100%; margin: auto; position: relative;">
+        <div style="top: 0px; width: 100%; margin: auto; position: relative;">
 
-			<div class="circle-loader" style="position: absolute; top: 80px; left: 295px; margin: auto;" id="circ">
-				<div class="checkmark draw"></div>
-			</div>
-			<div id="status">Waiting for camera...</div>
-				<div name="pane-webcam" style="height: 100%; position: relative;">
-							  <video name="video" autoplay style="border-radius: 5px; z-index: 9999;" id="cam_holder"></video>
-			  <canvas name="canvas" style="display: none;"></canvas>
-					<div>
-					  <span name="lbl-processing" style="background: navy; color: white; padding: 4px; min-width:100%; font-weight: bold; display: none;">Processing ...</span>
-					</div>
-			  </div>
-			</div>
+        <div class="circle-loader" style="position: absolute; top: 80px; left: 295px; margin: auto;" id="circ">
+          <div class="checkmark draw"></div>
+        </div>
+        <div id="status">Waiting for camera...</div>
+          <div name="pane-webcam" style="height: 100%; position: relative;">
+                  <video name="video" autoplay style="border-radius: 5px; z-index: 9999;" id="cam_holder"></video>
+          <canvas name="canvas" style="display: none;"></canvas>
+            <div>
+              <span name="lbl-processing" style="background: navy; color: white; padding: 4px; min-width:100%; font-weight: bold; display: none;">Processing ...</span>
+            </div>
+          </div>
+        </div>
 
 
 			</div>
@@ -126,8 +126,8 @@
   
     // create QRCodeScanner instance
     window.qrcodeScanner = new QRCodeScanner({ rootSelector: "#qrcode-scanner" });
-	var security = "";
-	var ticket_id = "";
+    var security = "";
+    var ticket_id = "";
 
     $(document).on("click", "#launch", function(e) {
 	
@@ -146,6 +146,7 @@
 		  const url = new URL(result.data);
 		  security = url.searchParams.get('security_code');
 		  ticket_id = url.searchParams.get('ticket_id');
+
 		  $('#submit_button').prop('disabled', false);
 		  $('.input-group').css('display', 'flex');
 		  $('.modal-footer').css('display', 'flex');
