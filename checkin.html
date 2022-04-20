@@ -63,35 +63,33 @@
     <div class="d-flex align-items-center justify-content-center hidden-print" style="min-width: 100%; height: 140px; background-size: cover; background-image: linear-gradient(to top, #49066c33, #b94bbd33), url('https://wallpaperboat.com/wp-content/uploads/2020/08/08/51893/anime-scenery-01.jpg');">
         <p class="h1" id="projectAnchor" style="color: #ffffff; text-shadow: 2px 2px 4px #000000;">Canadian Women in Cybersecurity 2022 Check-In</p>
     </div>
-    <div class="container-fluid p-5" style="padding-top: 20px !important; padding-bottom: 0px !important;">
-        <div class="hidden-print">
+    <div class="container-fluid p-5" style="padding-top: 20px !important; padding-bottom: 0px !important; max-width: 1800px;">
         <!-- Cards -->
-        <div class="card">
+        <div class="card hidden-print" style="margin-bottom: 20px;">
             <div class="card-body">
+                <h4 style="text-align: left; margin-bottom: 20px;">Attendee Lookup</h4>
 
                 <!-- Input -->
-                <div class="input-group">
+                <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
-                      <span class="input-group-text">Guest Lookup</span>
+                      <span class="input-group-text">Search Field</span>
                     </div>
                     <input class="form-control" aria-label="With textarea" id="search-bar"></input>
                     <button type="button" class="btn btn-primary" id="scan-button" style="margin-left:10px;" data-toggle="modal" data-target="#scanModal">Scan QR Code</button>
                 </div>
 
-                <hr style="opacity: 0;" />
-
                 <!-- Table -->
-                <table class="table table-hover" style="margin-bottom: 0px;">
+                <table class="table table-hover" style="margin-top: 40px; margin-bottom: 0px;" id="lookup-table">
                     <caption id="match_count">2</caption>
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <th></th>
                             <th class='col-2'>Name</th>
-                            <th class='col-2'>Email</th>
                             <th class='col-2'>Role</th>
                             <th class='col-2'>Organization</th>
-                            <th>Shirt Size</th>
-                            <th>Actions</th>
+                            <th class='col-2'>Email</th>
+                            <th class='col-2'>Work Email</th>
+                            <th></th>
                             <th style="display: none;">UID</th>
                         </tr>
                     </thead>
@@ -100,33 +98,61 @@
                 </table>
             </div>
         </div>
-        <div class="card" style="margin-top: 20px; margin-bottom: 20px; display: none;" id="print-control">
-            <div class="card-body">
-                <center>
-                    <button type="button" class="btn btn-primary" id="print-button" onclick="window.print()">Print Nametag</button>
-                    <button type="button" class="btn btn-success" id="check-in">Check-in Guest</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="reset-button">Clear Selection</button>
-                </center>
+        <div id="selected-attendee" style="display: none;">
+            <div id="left-col" style="float:left; height: 700px; width: 60%; padding-right: 20px;" class="hidden-print">
+                <div class="card hidden-print">
+                    <div class="card-body">
+                        <h4 style="text-align: left;">Registrant Details</h4>
+                        <div class="input-group guest-fields">                        
+                            <div class="input-group-prepend"><span class="input-group-text">Name</span></div><input id="name-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
+                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text">Type</span></div><input id="type-field" class="form-control" aria-label="With textarea"></input>
+                        </div>
+                        <div class="input-group guest-fields">
+                            <div class="input-group-prepend"><span class="input-group-text">Role</span></div><input id="role-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
+                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text">Email</span></div><input id="email-field" class="form-control" aria-label="With textarea"></input>
+                        </div>
+                        <div class="input-group guest-fields">
+                            <div class="input-group-prepend"><span class="input-group-text">Organization</span></div><input id="org-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
+                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text">Work Email</span></div><input id="work-field" class="form-control" aria-label="With textarea"></input>
+                        </div>
+                        <div class="input-group guest-fields">
+                            <div class="input-group-prepend"><span class="input-group-text">Dietary Needs</span></div><input id="dietary-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
+                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text">T-shirt Size</span></div><input id="shirt-field" class="form-control" aria-label="With textarea"></input>
+                        </div>
+                        <div class="input-group guest-fields">
+                            <div class="input-group-prepend"><span class="input-group-text">Ticket Number</span></div><input id="ticket-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
+                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text">Security Code</span></div><input id="uid-field" class="form-control" aria-label="With textarea"></input>
+                        </div>
+                    </div>
+                </div>
+                <div class="card hidden-print" style="margin-top: 20px; margin-bottom: 20px;" id="print-control">
+                    <div class="card-body">
+                        <center>
+                            <button style="width: 170px; margin-right: 10px; margin-left: 10px;" type="button" class="btn btn-success" data-dismiss="modal" id="save-button">Save Changes</button>
+                            <button style="width: 170px; margin-right: 10px; margin-left: 10px;" type="button" class="btn btn-secondary" data-dismiss="modal" id="reset-button">Clear Selection</button>
+                            <button style="width: 170px; margin-right: 10px; margin-left: 10px;" type="button" class="btn btn-success" id="check-in">Check-in Guest</button>
+                            <button style="width: 170px; margin-right: 10px; margin-left: 10px;" type="button" class="btn btn-primary" id="print-button" onclick="window.print()">Print Nametag</button>
+                        </center>
+                    </div>
+                </div>
+            </div>
+            <div id="right-col" style="width: 40%; float:left;">
+                <!-- Printing -->
+                <div id="print-view" style="min-height: 100%; margin-top: 0px;">
+                    <div class="card">
+                        <div class="card-body">
+                                <p class="h1" id="print-name">Jordan Ella</p>
+                                <p class="h3" id="print-role">Media Production Lead</p>
+                                <p class="h3" id="print-org">siberX</p><br />
+
+                                <!-- QR Code -->
+                                <center><div id="qrcode"></div></center>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- Printing -->
-    <div id="print-view" style="min-height: 100%; display:none; margin-top: 0px;">
-        <div class="card">
-            <div class="card-body">
-                <center>
-                    <p class="h1" id="print-name">Jordan Ella</p>
-                    <p class="h3" id="print-role">Media Production Lead</p>
-                    <p class="h3" id="print-org">siberX</p><br />
-
-                    <!-- QR Code -->
-                    <div id="qrcode" class="align-self-center" style="width: 700px;"></div>
-                </center>
-            </div>
-        </div>
-    </div>
-</div>
 
 </body>
 
@@ -139,7 +165,9 @@
     function doFilter(value) {
         
         if (value == "") {
-            value = "Too many possibilities.";
+            $('#lookup-table').hide();
+        } else {
+            $('#lookup-table').show();
         }
 
         $("#tbody tr").filter(function() {
@@ -168,7 +196,6 @@
     }
 
     fill_table();
-    
 
     $(document).ready(function() {
         
@@ -184,7 +211,6 @@
 
     $(document).on("click", "#scan-button", function(e) {
 	
-        //$('.circle-loader').removeClass('load-complete');
         $('.checkmark').hide();
         $('#modalTitle').html('QR Code Scanner');
         $('.modal-footer').css('display', 'none');
@@ -193,19 +219,19 @@
 
             $('#qrcode-scanner').css('display','none');
 
-            var url = new URL(result.data);
-            uid = url.searchParams.get('security_code');
+            var id = result.data.split(',');
+            alert(id[0],id[1])
 
-            if (uid == undefined) {
+            if (id[0] == undefined) {
 
                 toastPopup('The QR code did not match the expected format.','danger');
 
             } else {
 
-                $('#search-bar').val(uid);
-                doFilter(uid);
-                $("button[data-value='" + uid + "'").click();
-                print_show(uid);
+                $('#search-bar').val(id[0]);
+                doFilter(id[0].toLowerCase());
+                $("button[data-value='" + id[0] + "'").click();
+                print_show(id[0]);
                 $('#print-control').show();
 
 		    }
@@ -218,10 +244,22 @@
 
     $(document).on("click", ".select-print", function(e) {
         $('#search-bar').val($(this).attr('data-value'));
-        doFilter($(this).attr('data-value'));
+        doFilter($(this).attr('data-value').toLowerCase());
+
+        var attendee = data.find(row => row.uid == $(this).attr('data-value'));
+
+        $('#name-field').val(attendee.name);
+        $('#type-field').val(attendee.type);
+        $('#role-field').val(attendee.role);
+        $('#email-field').val(attendee.email);
+        $('#org-field').val(attendee.org);
+        $('#work-field').val(attendee.work_email);
+        $('#dietary-field').val(attendee.dietary);
+        $('#shirt-field').val(attendee.shirt);
+        $('#ticket-field').val(attendee.id);
+        $('#uid-field').val(attendee.uid);
+        
         print_show($(this).attr('data-value'));
-        $('#print-control').show();
-		$('.close').click();
     });
 
     $(document).on("click", "#check-in", function(e) {
@@ -249,8 +287,7 @@
     $(document).on("click", "#reset-button", function(e) {
         $('#search-bar').val('');
         doFilter('');
-        $('#print-view').hide();
-        $('#print-control').hide();
+        $('#selected-attendee').hide();
     });
 
 </script> 

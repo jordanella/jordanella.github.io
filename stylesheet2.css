@@ -18,6 +18,10 @@
 	top: 250px;
 }
 
+.input-group-text {
+	width: 130px;
+}
+
 @keyframes fadeIn {
 	0% {
 		opacity: 0;
@@ -34,6 +38,10 @@
 	100% {
 		opacity: 0;
 	}
+}
+
+.guest-fields {
+  padding-top: 20px;
 }
 
 body {

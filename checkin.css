@@ -1,6 +1,7 @@
 @media print {
     .visible-print  { display: flex !important; }
     .hidden-print   { display: none !important; }
+    #right-col { width: 100% !important; }
     div {
       border: 0px !important;
       padding: 0px !important;

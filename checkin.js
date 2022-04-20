@@ -1,59 +1,74 @@
 var data = [
     {
-        "id": "101",
+        "id": "10898",
         "name": "Jordan Ella",
         "email": "jordan@jordanella.com",
+        "work_email": "jordan@jordanella.com",
         "role": "Media Production Lead",
         "org": "siberX",
         "shirt": "XL",
-        "uid": "0e26294",
-        "checked": "True"
+        "uid": "S27ylES0wiLdFAGdUpFgCQ",
+        "checked": "True",
+        "dietary": "",
+        "type": "Speaker"
     },
     {
         "id": "10898",
         "name": "Shrey Raval",
         "email": "shrey@siberx.org",
+        "work_email": "jordan@jordanella.com",
         "role": "Wizard",
         "org": "siberX",
         "shirt": "XL",
         "uid": "05e26294f3",
-        "checked": "False"
+        "checked": "False",
+        "dietary": "Veg",
+        "type": "Speaker"
     },
     {
         "id": "103",
         "name": "Mahdi Raza",
         "email": "mahdi@siberx.org",
+        "work_email": "jordan@jordanella.com",
         "role": "CEO & Founder",
         "org": "siberX",
         "shirt": "XL",
-        "uid": "052629",
-        "checked": "True"
+        "uid": "S27ylES0wiLdFAGdUpFgC2",
+        "checked": "True",
+        "dietary": "",
+        "type": "Speaker"
     },
     {
         "id": "104",
         "name": "Ali Abbas Hirji",
         "email": "ali.hirji@durhamcollege.ca",
+        "work_email": "jordan@jordanella.com",
         "role": "Director, AI & Cyber",
         "org": "Durham College",
         "shirt": "XL",
         "uid": "05e629",
-        "checked": "False"
+        "checked": "False",
+        "dietary": "",
+        "type": "Speaker"
     },
     {
         "id": "105",
         "name": "Zainab Zaidi",
         "email": "zainab@siberx.org",
+        "work_email": "jordan@jordanella.com",
         "role": "Director, Marketing",
         "org": "siberX",
         "shirt": "XL",
         "uid": "05e263",
-        "checked": "False"
+        "checked": "False",
+        "dietary": "",
+        "type": "Speaker"
     }
 ];
 
 function print_show(ticket) {
 
-    $('#print-view').show();
+    $('#selected-attendee').show();
 
     var selected = data.find(row => row.uid == ticket);
 
@@ -74,15 +89,14 @@ function print_show(ticket) {
     }
 
     $('#qrcode').html("");
-    new QRCode(document.getElementById("qrcode"), "https://www.siberx.org/?event_qr_code=1&ticket_id=" + selected.id + "&event_id=9718&security_code=" + selected.uid);
+    //new QRCode(document.getElementById("qrcode"), "https://www.siberx.org/?event_qr_code=1&ticket_id=" + selected.id + "&event_id=9718&security_code=" + selected.uid);
+    new QRCode(document.getElementById("qrcode"), selected.uid + "," + selected.id);
 
 };
 
 function fill_table() {
 
     var tbody = $('#tbody');
-
-
 
     for (var i = 0; i < data.length; i++) {  
 
@@ -92,11 +106,13 @@ function fill_table() {
             var labelString = "success'>Checked-in";
         }
 
-        tbody.append("<tr><td style='width: 200px;'><div style='min-width: 100px; display: inline-block;'><span data-value='" + data[i].uid + "'class='badge badge-" + labelString + "</span></div><div style='min-width: 60px; display: inline-block; text-align: left;'>" + data[i].id + "</div></td><td class='col-2'>" + data[i].name 
-        + "</td><td class='col-2'>" + data[i].email 
+        tbody.append("<tr><td style='width: 80px;'><span data-value='" + data[i].uid 
+        + "'class='badge badge-" + labelString 
+        + "</span></td><td class='col-2'>" + data[i].name 
         + "</td><td class='col-2'>" + data[i].role 
         + "</td><td class='col-2'>" + data[i].org 
-        + "</td><td>" + data[i].shirt 
+        + "</td><td class='col-2'>" + data[i].email 
+        + "</td><td class='col-2'>" + data[i].work_email 
         + "</td><td><button type='button' class='btn btn-info select-print' data-value='" + data[i].uid 
         + "'>Select</button></td><td style='display: none;'>" + data[i].uid + "</td></tr>");
     };
