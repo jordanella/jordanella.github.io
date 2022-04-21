@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie-edge">
+    <title>Canadian Women in Cybersecurity Check-in Application</title>
+
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" type="text/css" media="print" href="./checkin.css">
+    <script src="checkin.js"></script>
+
+    <script type="text/javascript" src="./QRCodeScanner.js"></script>
+
+    <!-- Generate QR -->
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <link rel="stylesheet" href="./stylesheet2.css">
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jsqr@1.1.1/dist/jsQR.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://unpkg.com/@zxing/library@dev"></script>
+</head>
+
+<body>
+    <!-- Modal -->
+    <div class="modal fade" id="scanModal" tabindex="-1" role="dialog" aria-labelledby="scanModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="min-width: 750px !important; margin: auto;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">QR Code Scanner</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="qrcode-scanner" style="display: none;">
+                        <div style="top: 0px; width: 100%; margin: auto; position: relative;">
+                            <div class="circle-loader" style="position: absolute; top: 80px; left: 295px; margin: auto;" id="circ">
+                                <div class="checkmark draw"></div>
+                            </div>
+                            <div id="status">Waiting for camera...</div>
+                            <div name="pane-webcam" style="height: 100%; position: relative;">
+                                <video name="video" autoplay style="border-radius: 5px; z-index: 9999;" id="video"></video>
+                                <canvas name="canvas" style="display: none;"></canvas>
+                                <div>
+                                    <span name="lbl-processing" style="background: navy; color: white; padding: 4px; min-width:100%; font-weight: bold; display: none;">Processing ...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="d-flex align-items-center justify-content-center hidden-print" style="min-width: 100%; height: 140px; background-size: cover; background-image: linear-gradient(to top, #49066c33, #b94bbd33), url('https://wallpaperboat.com/wp-content/uploads/2020/08/08/51893/anime-scenery-01.jpg');">
+        <p class="h1" id="projectAnchor" style="color: #ffffff; text-shadow: 2px 2px 4px #000000;">Canadian Women in Cybersecurity 2022 Check-In</p>
+    </div>
+    <div class="container-fluid p-5" style="padding-top: 20px !important; padding-bottom: 0px !important; max-width: 1800px;">
+        <!-- Cards -->
+        <div class="card hidden-print" style="margin-bottom: 20px;">
+            <div class="card-body">
+                <h4 style="text-align: left; margin-bottom: 20px;">Attendee Lookup</h4>
+
+                <!-- Input -->
+                <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Search Field</span>
+                    </div>
+                    <input class="form-control" aria-label="With textarea" id="search-bar"></input>
+                    <button type="button" class="btn btn-primary" id="scan-button" style="margin-left:10px;" data-toggle="modal" data-target="#scanModal">Scan QR Code</button>
+                </div>
+
+                <!-- Table -->
+                <table class="table table-hover" style="margin-top: 40px; margin-bottom: 0px;" id="lookup-table">
+                    <caption id="match_count">2</caption>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class='col-2'>Name</th>
+                            <th class='col-2'>Role</th>
+                            <th class='col-2'>Organization</th>
+                            <th class='col-2'>Email</th>
+                            <th class='col-2'>Work Email</th>
+                            <th></th>
+                            <th style="display: none;">UID</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="selected-attendee" style="display: none;">
+            <div id="left-col" style="float:left; height: 700px; width: 60%; padding-right: 20px;" class="hidden-print">
+                <div class="card hidden-print">
+                    <div class="card-body">
+                        <h4 style="text-align: left;">Registrant Details</h4>
+                        <div class="input-group guest-fields">                        
+                            <div class="input-group-prepend"><span class="input-group-text">Name</span></div><input id="name-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
+                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text">Type</span></div><input id="type-field" class="form-control" aria-label="With textarea"></input>
+                        </div>
+                        <div class="input-group guest-fields">
+                            <div class="input-group-prepend"><span class="input-group-text">Role</span></div><input id="role-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
+                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text">Email</span></div><input id="email-field" class="form-control" aria-label="With textarea"></input>
+                        </div>
+                        <div class="input-group guest-fields">
+                            <div class="input-group-prepend"><span class="input-group-text">Organization</span></div><input id="org-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
+                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text">Work Email</span></div><input id="work-field" class="form-control" aria-label="With textarea"></input>
+                        </div>
+                        <div class="input-group guest-fields">
+                            <div class="input-group-prepend"><span class="input-group-text">Dietary Needs</span></div><input id="dietary-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
+                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text">T-shirt Size</span></div><input id="shirt-field" class="form-control" aria-label="With textarea"></input>
+                        </div>
+                        <div class="input-group guest-fields">
+                            <div class="input-group-prepend"><span class="input-group-text">Ticket Number</span></div><input id="ticket-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
+                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text">Security Code</span></div><input id="uid-field" class="form-control" aria-label="With textarea"></input>
+                        </div>
+                    </div>
+                </div>
+                <div class="card hidden-print" style="margin-top: 20px; margin-bottom: 20px;" id="print-control">
+                    <div class="card-body">
+                        <center>
+                            <button style="width: 170px; margin-right: 10px; margin-left: 10px;" type="button" class="btn btn-success" data-dismiss="modal" id="save-button">Save Changes</button>
+                            <button style="width: 170px; margin-right: 10px; margin-left: 10px;" type="button" class="btn btn-secondary" data-dismiss="modal" id="reset-button">Clear Selection</button>
+                            <button style="width: 170px; margin-right: 10px; margin-left: 10px;" type="button" class="btn btn-success" id="check-in">Check-in Guest</button>
+                            <button style="width: 170px; margin-right: 10px; margin-left: 10px;" type="button" class="btn btn-primary" id="print-button" onclick="window.print()">Print Nametag</button>
+                        </center>
+                    </div>
+                </div>
+            </div>
+            <div id="right-col" style="width: 40%; float:left;">
+                <!-- Printing -->
+                <div id="print-view" style="min-height: 100%; margin-top: 0px;">
+                    <div class="card">
+                        <div class="card-body">
+                                <p class="h1" id="print-name">Jordan Ella</p>
+                                <p class="h3" id="print-role">Media Production Lead</p>
+                                <p class="h3" id="print-org">siberX</p><br />
+
+                                <!-- QR Code -->
+                                <center><div id="qrcode"></div></center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <main class="wrapper" style="padding-top:2em">
+
+        <section class="container" id="demo-content">
+            <h1 class="title">Scan barcode from Video Camera</h1>
+
+            <div>
+                <a class="button" id="startButton">Start</a>
+                <a class="button" id="resetButton">Reset</a>
+            </div>
+
+            <div>
+                <video id="video" width="600" height="400" style="border: 1px solid gray"></video>
+            </div>
+
+            <div id="sourceSelectPanel" style="display:none">
+                <label for="sourceSelect">Change video source:</label>
+                <select id="sourceSelect" style="max-width:400px">
+                </select>
+            </div>
+
+            <label>Result:</label>
+            <blockquote>
+                <p id="result"></p>
+            </blockquote>
+        </section>
+    </main>
+</body>
+
+<script type="text/javascript">
+
+    var row_max_count = 5
+
+    var qrcodeScanner = new QRCodeScanner({ rootSelector: "#qrcode-scanner" });
+
+    function doFilter(value) {
+        
+        if (value == "") {
+            $('#lookup-table').hide();
+        } else {
+            $('#lookup-table').show();
+        }
+
+        $("#tbody tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+
+        var match_count = 0;
+
+        $("tbody tr").each(function() {
+            if ($(this).is(":hidden") == false){
+                match_count++;
+                if (match_count > row_max_count) {
+                    $(this).hide();
+                }
+            }
+        });
+        
+        if(row_max_count < match_count) {
+            $('#match_count').html("Displaying " + (row_max_count) + " of " + match_count + " matches.");
+        } else if (match_count == 1) {
+            $('#match_count').html("Displaying 1 match.");
+        } else {
+            $('#match_count').html("Displaying " + match_count + " matches.");
+        }
+
+    }
+
+    fill_table();
+
+    $(document).ready(function() {
+        
+        doFilter($(this).val().toLowerCase());
+        
+        $("#search-bar").on("keyup change", function() {
+            doFilter($(this).val().toLowerCase());
+        });
+
+    });
+
+    window.qrcodeScanner = new QRCodeScanner({ rootSelector: "#qrcode-scanner" });
+
+    $(document).on("click", "#scan-button", function(e) {
+	
+        $('.checkmark').hide();
+        $('#modalTitle').html('QR Code Scanner');
+        $('.modal-footer').css('display', 'none');
+
+        //qrcodeScanner.open((err, result) => {
+
+        //    $('#qrcode-scanner').css('display','none');
+
+        //    var id = result.data.split(',');
+        //    alert(id[0],id[1])
+
+        //    if (id[0] == undefined) {
+
+        //        toastPopup('The QR code did not match the expected format.','danger');
+
+        //    } else {
+
+        //        $('#search-bar').val(id[0]);
+        //        doFilter(id[0].toLowerCase());
+        //        $("button[data-value='" + id[0] + "'").click();
+        //        print_show(id[0]);
+        //        $('#print-control').show();
+
+		//    }
+
+        //    $('.close').click();
+
+        //});
+
+    });
+
+    $(document).on("click", ".select-print", function(e) {
+        $('#search-bar').val($(this).attr('data-value'));
+        doFilter($(this).attr('data-value').toLowerCase());
+
+        var attendee = data.find(row => row.uid == $(this).attr('data-value'));
+
+        $('#name-field').val(attendee.name);
+        $('#type-field').val(attendee.type);
+        $('#role-field').val(attendee.role);
+        $('#email-field').val(attendee.email);
+        $('#org-field').val(attendee.org);
+        $('#work-field').val(attendee.work_email);
+        $('#dietary-field').val(attendee.dietary);
+        $('#shirt-field').val(attendee.shirt);
+        $('#ticket-field').val(attendee.id);
+        $('#uid-field').val(attendee.uid);
+        
+        print_show($(this).attr('data-value'));
+    });
+
+    $(document).on("click", "#check-in", function(e) {
+        var checkButton = $(this);
+        var badge = $("span[data-value='" + checkButton.attr('data-value') + "'");
+        if (badge.hasClass('badge-primary')) {
+            checkButton.addClass('btn-info');
+            checkButton.removeClass('btn-success');
+            checkButton.html('Admitted');
+            toastPopup('Guest successfully checked-in to the conference.','success');
+            badge.html('Checked-in');
+            badge.removeClass('badge-primary');
+            badge.addClass('badge-success');
+        } else {
+            checkButton.removeClass('btn-info');
+            checkButton.addClass('btn-success');
+            checkButton.html('Check-in Guest');
+            toastPopup('Guest check-in status has been revoked.','danger');
+            badge.html('Registered');
+            badge.addClass('badge-primary');
+            badge.removeClass('badge-success');
+        }
+    });
+
+    $(document).on("click", "#reset-button", function(e) {
+        $('#search-bar').val('');
+        doFilter('');
+        $('#selected-attendee').hide();
+    });
+
+    window.addEventListener('load', function () {
+            const codeReader = new ZXing.BrowserBarcodeReader()
+            console.log('ZXing code reader initialized')
+            codeReader.getVideoInputDevices()
+                .then((videoInputDevices) => {
+                    const sourceSelect = document.getElementById('sourceSelect')
+                    videoInputDevices.forEach((element) => {
+                      const sourceOption = document.createElement('option')
+                      sourceOption.text = element.label
+                      sourceOption.value = element.deviceId
+                      sourceSelect.appendChild(sourceOption)
+                    });
+                    sourceSelect.selectedIndex = 0;
+
+                    if (videoInputDevices.length > 1) {
+                        const sourceSelectPanel = document.getElementById('sourceSelectPanel')
+                        sourceSelectPanel.style.display = 'block'
+                    }
+
+                    document.getElementById('scan-button').addEventListener('click', () => {
+                        const sourceSelect = document.getElementById('sourceSelect')
+                        const devideId = sourceSelect[sourceSelect.selectedIndex].value
+                        codeReader.decodeFromInputVideoDevice(devideId, 'video').then((result) => {
+                            console.log(result)
+                            document.getElementById('result').textContent = result.text
+                        }).catch((err) => {
+                            console.error(err)
+                            document.getElementById('result').textContent = err
+                        })
+                        console.log(`Started continous decode from camera with id ${firstDeviceId}`)
+                    })
+
+                    document.getElementById('resetButton').addEventListener('click', () => {
+                        document.getElementById('result').textContent = '';
+                        codeReader.reset();
+
+                        console.log('Reset.')
+                    })
+
+                })
+                .catch((err) => {
+                    console.error(err)
+                })
+        })
+</script> 
+
+<footer class="container-fluid">
+
+</footer>
+
+</html>
