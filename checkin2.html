@@ -285,8 +285,6 @@
 
     var row_max_count = 5
 
-    var qrcodeScanner = new QRCodeScanner({ rootSelector: "#qrcode-scanner" });
-
     function doFilter(value) {
         
         if (value == "") {
@@ -332,7 +330,7 @@
 
     });
 
-    window.qrcodeScanner = new QRCodeScanner({ rootSelector: "#qrcode-scanner" });
+    //window.qrcodeScanner = new QRCodeScanner({ rootSelector: "#qrcode-scanner" });
 
     $(document).on("click", "#scan-button", function(e) {
 	
@@ -340,7 +338,7 @@
         $('#modalTitle').html('QR Code Scanner');
         $('.modal-footer').css('display', 'none');
 
-        qrcodeScanner.open((err, result) => {
+    /*    qrcodeScanner.open((err, result) => {
 
             $('#qrcode-scanner').css('display','none');
 
@@ -363,7 +361,7 @@
 
             $('.close').click();
 
-        });
+        });*/
 
     });
 
