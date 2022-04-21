@@ -78,6 +78,7 @@ function print_show(ticket) {
     $('#check-in').attr('data-value', selected.uid);
 
     var badge = $("span[data-value='" + $('#check-in').attr('data-value') + "'");
+
     if (badge.hasClass('badge-primary')) {
         $('#check-in').removeClass('btn-info');
         $('#check-in').addClass('btn-success');
@@ -106,14 +107,14 @@ function fill_table() {
             var labelString = "success'>Checked-in";
         }
 
-        tbody.append("<tr><td style='width: 80px;'><span data-value='" + data[i].uid 
+        tbody.append("<tr><td style='width: 100px;'><span data-value='" + data[i].uid 
         + "'class='badge badge-" + labelString 
         + "</span></td><td class='col-2'>" + data[i].name 
         + "</td><td class='col-2'>" + data[i].role 
         + "</td><td class='col-2'>" + data[i].org 
         + "</td><td class='col-2'>" + data[i].email 
         + "</td><td class='col-2'>" + data[i].work_email 
-        + "</td><td><button type='button' class='btn btn-info select-print' data-value='" + data[i].uid 
+        + "</td><td><button type='button' class='btn btn-info select-print' id='select-show' data-value='" + data[i].uid 
         + "'>Select</button></td><td style='display: none;'>" + data[i].uid + "</td></tr>");
     };
 

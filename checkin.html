@@ -34,22 +34,25 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalTitle">QR Code Scanner</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" id="close-modal" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div id="qrcode-scanner" style="display: none;">
+                    <div id="qrcode-scanner">
                         <div style="top: 0px; width: 100%; margin: auto; position: relative;">
                             <div class="circle-loader" style="position: absolute; top: 80px; left: 295px; margin: auto;" id="circ">
                                 <div class="checkmark draw"></div>
                             </div>
                             <div id="status">Waiting for camera...</div>
                             <div name="pane-webcam" style="height: 100%; position: relative;">
-                                <video name="video" autoplay style="border-radius: 5px; z-index: 9999;" id="cam_holder"></video>
-                                <canvas name="canvas" style="display: none;"></canvas>
-                                <div>
-                                    <span name="lbl-processing" style="background: navy; color: white; padding: 4px; min-width:100%; font-weight: bold; display: none;">Processing ...</span>
+                                <video id="video" width="700" style="min-height: 200px; margin-bottom: 10px; border-radius: 5px;"></video>
+                                <div class="input-group" style="margin-bottom: 20px;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Select Camera</span>
+                                    </div>
+                                    <select id="sourceSelect" class="form-control"></select>
+                                    <button type="button" class="btn btn-primary" id="startButton" style="margin-left: 10px;">Start Camera</button>
                                 </div>
                             </div>
                         </div>
@@ -72,14 +75,14 @@
                 <!-- Input -->
                 <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
-                      <span class="input-group-text">Search Field</span>
+                      <span class="input-group-text input-group-field">Search Field</span>
                     </div>
                     <input class="form-control" aria-label="With textarea" id="search-bar"></input>
                     <button type="button" class="btn btn-primary" id="scan-button" style="margin-left:10px;" data-toggle="modal" data-target="#scanModal">Scan QR Code</button>
                 </div>
 
                 <!-- Table -->
-                <table class="table table-hover" style="margin-top: 40px; margin-bottom: 0px;" id="lookup-table">
+                <table class="table table-hover" style="margin-top: 40px; margin-bottom: 0px; display: none;" id="lookup-table">
                     <caption id="match_count">2</caption>
                     <thead>
                         <tr>
@@ -104,24 +107,24 @@
                     <div class="card-body">
                         <h4 style="text-align: left;">Registrant Details</h4>
                         <div class="input-group guest-fields">                        
-                            <div class="input-group-prepend"><span class="input-group-text">Name</span></div><input id="name-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
-                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text">Type</span></div><input id="type-field" class="form-control" aria-label="With textarea"></input>
+                            <div class="input-group-prepend"><span class="input-group-text input-group-field">Name</span></div><input id="name-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
+                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text input-group-field">Type</span></div><input id="type-field" class="form-control" aria-label="With textarea"></input>
                         </div>
                         <div class="input-group guest-fields">
-                            <div class="input-group-prepend"><span class="input-group-text">Role</span></div><input id="role-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
-                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text">Email</span></div><input id="email-field" class="form-control" aria-label="With textarea"></input>
+                            <div class="input-group-prepend"><span class="input-group-text input-group-field">Role</span></div><input id="role-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
+                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text input-group-field">Email</span></div><input id="email-field" class="form-control" aria-label="With textarea"></input>
                         </div>
                         <div class="input-group guest-fields">
-                            <div class="input-group-prepend"><span class="input-group-text">Organization</span></div><input id="org-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
-                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text">Work Email</span></div><input id="work-field" class="form-control" aria-label="With textarea"></input>
+                            <div class="input-group-prepend"><span class="input-group-text input-group-field">Organization</span></div><input id="org-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
+                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text input-group-field">Work Email</span></div><input id="work-field" class="form-control" aria-label="With textarea"></input>
                         </div>
                         <div class="input-group guest-fields">
-                            <div class="input-group-prepend"><span class="input-group-text">Dietary Needs</span></div><input id="dietary-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
-                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text">T-shirt Size</span></div><input id="shirt-field" class="form-control" aria-label="With textarea"></input>
+                            <div class="input-group-prepend"><span class="input-group-text input-group-field">Dietary Needs</span></div><input id="dietary-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
+                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text input-group-field">T-shirt Size</span></div><input id="shirt-field" class="form-control" aria-label="With textarea"></input>
                         </div>
                         <div class="input-group guest-fields">
-                            <div class="input-group-prepend"><span class="input-group-text">Ticket Number</span></div><input id="ticket-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
-                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text">Security Code</span></div><input id="uid-field" class="form-control" aria-label="With textarea"></input>
+                            <div class="input-group-prepend"><span class="input-group-text input-group-field">Ticket Number</span></div><input id="ticket-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
+                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text input-group-field">Security Code</span></div><input id="uid-field" class="form-control" aria-label="With textarea"></input>
                         </div>
                     </div>
                 </div>
@@ -154,13 +157,137 @@
         </div>
     </div>
 
+<script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
+<script type="text/javascript">
+    function decodeOnce(codeReader, selectedDeviceId) {
+    codeReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) => {
+        // properly decoded qr code
+        console.log(result);
+
+        // Ticket Format
+        var id =[];
+        const url = new URL(result);
+        id[0] = url.searchParams.get('security_code');
+        id[1] = url.searchParams.get('ticket_id');
+
+        //Created
+        /*
+        var id = result.text.split(',');
+
+        */
+        if (id[1] == undefined) {
+
+            toastPopup('The QR code did not match the expected format.','danger');
+
+        } else {
+
+            $('#search-bar').val(id[0]);
+            doFilter(id[0].toLowerCase());
+
+            if ($('#match_count').html() == "Displaying 1 match.") {
+                $("#select-show[data-value='" + id[0] + "'").click();
+                print_show(id[0]);
+            } else {
+                toastPopup('Could not locate the scanned attendee.','danger');
+                $('#reset-button').click();
+            }
+
+        }
+        
+        $('#close-modal').click();
+        codeReader.reset();
+
+    }).catch((err) => {
+        console.error(err)
+    })
+    }
+
+    function decodeContinuously(codeReader, selectedDeviceId) {
+    codeReader.decodeFromInputVideoDeviceContinuously(selectedDeviceId, 'video', (result, err) => {
+        if (result) {
+        // properly decoded qr code
+        console.log('Found QR code!', result)
+        }
+
+        if (err) {
+        // As long as this error belongs into one of the following categories
+        // the code reader is going to continue as excepted. Any other error
+        // will stop the decoding loop.
+        //
+        // Excepted Exceptions:
+        //
+        //  - NotFoundException
+        //  - ChecksumException
+        //  - FormatException
+
+        if (err instanceof ZXing.NotFoundException) {
+            console.log('No QR code found.')
+        }
+
+        if (err instanceof ZXing.ChecksumException) {
+            console.log('A code was found, but it\'s read value was not valid.')
+        }
+
+        if (err instanceof ZXing.FormatException) {
+            console.log('A code was found, but it was in a invalid format.')
+        }
+        }
+    })
+    }
+
+    window.addEventListener('load', function () {
+    let selectedDeviceId;
+    const codeReader = new ZXing.BrowserQRCodeReader()
+    console.log('ZXing code reader initialized')
+
+    codeReader.getVideoInputDevices()
+        .then((videoInputDevices) => {
+        const sourceSelect = document.getElementById('sourceSelect')
+        selectedDeviceId = videoInputDevices[0].deviceId
+        if (videoInputDevices.length >= 1) {
+            videoInputDevices.forEach((element) => {
+            const sourceOption = document.createElement('option')
+            sourceOption.text = element.label
+            sourceOption.value = element.deviceId
+            sourceSelect.appendChild(sourceOption)
+            })
+
+            sourceSelect.onchange = () => {
+            selectedDeviceId = sourceSelect.value;
+            };
+        }
+
+        document.getElementById('startButton').addEventListener('click', () => {
+
+            //const decodingStyle = document.getElementById('decoding-style').value;
+
+            //if (decodingStyle == "once") {
+            decodeOnce(codeReader, selectedDeviceId);
+            //} else {
+            //decodeContinuously(codeReader, selectedDeviceId);
+            //}
+
+            console.log(`Started decode from camera with id ${selectedDeviceId}`)
+        })
+
+        /*document.getElementById('resetButton').addEventListener('click', () => {
+            codeReader.reset()
+            document.getElementById('result').textContent = '';
+            console.log('Reset.')
+        })*/
+
+        })
+        .catch((err) => {
+        console.error(err)
+        })
+    })
+</script>
+
 </body>
 
 <script type="text/javascript">
 
     var row_max_count = 5
-
-    var qrcodeScanner = new QRCodeScanner({ rootSelector: "#qrcode-scanner" });
 
     function doFilter(value) {
         
@@ -207,15 +334,9 @@
 
     });
 
-    window.qrcodeScanner = new QRCodeScanner({ rootSelector: "#qrcode-scanner" });
+    //window.qrcodeScanner = new QRCodeScanner({ rootSelector: "#qrcode-scanner" });
 
-    $(document).on("click", "#scan-button", function(e) {
-	
-        $('.checkmark').hide();
-        $('#modalTitle').html('QR Code Scanner');
-        $('.modal-footer').css('display', 'none');
-
-        qrcodeScanner.open((err, result) => {
+    /*    qrcodeScanner.open((err, result) => {
 
             $('#qrcode-scanner').css('display','none');
 
@@ -238,9 +359,7 @@
 
             $('.close').click();
 
-        });
-
-    });
+        });*/
 
     $(document).on("click", ".select-print", function(e) {
         $('#search-bar').val($(this).attr('data-value'));
@@ -289,6 +408,8 @@
         doFilter('');
         $('#selected-attendee').hide();
     });
+
+
 
 </script> 
 

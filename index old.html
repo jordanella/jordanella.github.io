@@ -39,30 +39,31 @@
         </button>
 	  </div>
       <div class="modal-body">
-		    <div id="qrcode-scanner">
-          <div style="top: 0px; width: 100%; margin: auto; position: relative;">
-            <div class="circle-loader" style="position: absolute; top: 80px; left: 295px; margin: auto;" id="circ">
-              <div class="checkmark draw"></div>
-            </div>
-            <div id="status">Waiting for camera...</div>
-            <div name="pane-webcam" style="height: 100%; position: relative;">
-              <video id="video" width="700" style="min-height: 200px; margin-bottom: 10px; border-radius: 5px;"></video>
-              <div class="input-group" style="margin-bottom: 20px;">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">Select Camera</span>
-                </div>
-                <select id="sourceSelect" class="form-control"></select>
-                <button type="button" class="btn btn-primary" id="startButton" style="margin-left: 10px;">Start Camera</button>
-              </div>
+		  <div id="qrcode-scanner" style="display: none;">
+			
+        <div style="top: 0px; width: 100%; margin: auto; position: relative;">
+
+        <div class="circle-loader" style="position: absolute; top: 80px; left: 295px; margin: auto;" id="circ">
+          <div class="checkmark draw"></div>
+        </div>
+        <div id="status">Waiting for camera...</div>
+          <div name="pane-webcam" style="height: 100%; position: relative;">
+                  <video name="video" autoplay style="border-radius: 5px; z-index: 9999;" id="cam_holder"></video>
+          <canvas name="canvas" style="display: none;"></canvas>
+            <div>
+              <span name="lbl-processing" style="background: navy; color: white; padding: 4px; min-width:100%; font-weight: bold; display: none;">Processing ...</span>
             </div>
           </div>
         </div>
-        <div class="input-group" id="comment-form">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Comments</span>
-          </div>
-          <textarea class="form-control" aria-label="With textarea" id="comments"></textarea>
-        </div>
+
+
+			</div>
+        <div class="input-group">
+		  <div class="input-group-prepend">
+			<span class="input-group-text">Comments</span>
+		  </div>
+		  <textarea class="form-control" aria-label="With textarea" id="comments"></textarea>
+		</div>
       </div>
       <div class="modal-footer" style="margin:auto;">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -81,128 +82,6 @@
 	</button>
 
 </div>
-
-<script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
-<script type="text/javascript">
-
-  var security = "";
-  var ticket_id = "";
-
-    function decodeOnce(codeReader, selectedDeviceId) {
-    codeReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) => {
-        // properly decoded qr code
-        console.log(result);
-
-        var id = result.text.split(',');
-
-        if (id[1] == undefined) {
-
-            toastPopup('The QR code did not match the expected format.','danger');
-
-        } else {
-
-          security = id[0];
-          ticket_id = id[1];
-
-          $('#submit_button').prop('disabled', false);
-          $('#comment-form').css('display', 'flex');
-          $('.modal-footer').css('display', 'flex');
-          $('#modalTitle').html('Add any optional comments and submit.');
-          $('#qrcode-scanner').css('display','none');
-
-        }
-        
-        $('#close-modal').click();
-        codeReader.reset();
-
-
-
-    }).catch((err) => {
-        console.error(err)
-    })
-    }
-
-    function decodeContinuously(codeReader, selectedDeviceId) {
-    codeReader.decodeFromInputVideoDeviceContinuously(selectedDeviceId, 'video', (result, err) => {
-        if (result) {
-        // properly decoded qr code
-        console.log('Found QR code!', result)
-        }
-
-        if (err) {
-        // As long as this error belongs into one of the following categories
-        // the code reader is going to continue as excepted. Any other error
-        // will stop the decoding loop.
-        //
-        // Excepted Exceptions:
-        //
-        //  - NotFoundException
-        //  - ChecksumException
-        //  - FormatException
-
-        if (err instanceof ZXing.NotFoundException) {
-            console.log('No QR code found.')
-        }
-
-        if (err instanceof ZXing.ChecksumException) {
-            console.log('A code was found, but it\'s read value was not valid.')
-        }
-
-        if (err instanceof ZXing.FormatException) {
-            console.log('A code was found, but it was in a invalid format.')
-        }
-        }
-    })
-    }
-
-    window.addEventListener('load', function () {
-    let selectedDeviceId;
-    const codeReader = new ZXing.BrowserQRCodeReader()
-    console.log('ZXing code reader initialized')
-
-    codeReader.getVideoInputDevices()
-        .then((videoInputDevices) => {
-        const sourceSelect = document.getElementById('sourceSelect')
-        selectedDeviceId = videoInputDevices[0].deviceId
-        if (videoInputDevices.length >= 1) {
-            videoInputDevices.forEach((element) => {
-            const sourceOption = document.createElement('option')
-            sourceOption.text = element.label
-            sourceOption.value = element.deviceId
-            sourceSelect.appendChild(sourceOption)
-            })
-
-            sourceSelect.onchange = () => {
-            selectedDeviceId = sourceSelect.value;
-            };
-        }
-
-        document.getElementById('startButton').addEventListener('click', () => {
-
-            //const decodingStyle = document.getElementById('decoding-style').value;
-
-            //if (decodingStyle == "once") {
-            decodeOnce(codeReader, selectedDeviceId);
-            //} else {
-            //decodeContinuously(codeReader, selectedDeviceId);
-            //}
-
-            console.log(`Started decode from camera with id ${selectedDeviceId}`)
-        })
-
-        /*document.getElementById('resetButton').addEventListener('click', () => {
-            codeReader.reset()
-            document.getElementById('result').textContent = '';
-            console.log('Reset.')
-        })*/
-
-        })
-        .catch((err) => {
-        console.error(err)
-        })
-    })
-</script>
-
   <script type="text/javascript">
     const this_url = new URL(window.location.href);
     var vendor_id = this_url.searchParams.get('vendorID');
@@ -246,7 +125,9 @@
     }
   
     // create QRCodeScanner instance
-    //window.qrcodeScanner = new QRCodeScanner({ rootSelector: "#qrcode-scanner" });
+    window.qrcodeScanner = new QRCodeScanner({ rootSelector: "#qrcode-scanner" });
+    var security = "";
+    var ticket_id = "";
 
     $(document).on("click", "#launch", function(e) {
 	
@@ -257,23 +138,23 @@
 	  $('.checkmark').hide();
 	  $('#submit_button').prop('disabled', true);
 	  $('#modalTitle').html('QR Code Scanner');
-	  $('#comment-form').css('display', 'none');
+	  $('.input-group').css('display', 'none');
 	  $('.modal-footer').css('display', 'none');
 
-      /*qrcodeScanner.open((err, result) => {
+      qrcodeScanner.open((err, result) => {
 	
 		  const url = new URL(result.data);
 		  security = url.searchParams.get('security_code');
 		  ticket_id = url.searchParams.get('ticket_id');
 
 		  $('#submit_button').prop('disabled', false);
-		  $('#comment-form').css('display', 'flex');
+		  $('.input-group').css('display', 'flex');
 		  $('.modal-footer').css('display', 'flex');
 		  $('#modalTitle').html('Add any optional comments and submit.');
 		  $('#qrcode-scanner').css('display','none');
 		  // console.log("QRCodeScanner dataURL:", result.data);
 		  //x.style.display = "inline-flex";
-      });*/
+      });
     });
 	
 	$(document).on("click", "#submit_button", function(e) {
