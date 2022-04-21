@@ -46,11 +46,39 @@
                             </div>
                             <div id="status">Waiting for camera...</div>
                             <div name="pane-webcam" style="height: 100%; position: relative;">
-                                <video name="video" autoplay style="border-radius: 5px; z-index: 9999;" id="cam_holder"></video>
-                                <canvas name="canvas" style="display: none;"></canvas>
-                                <div>
-                                    <span name="lbl-processing" style="background: navy; color: white; padding: 4px; min-width:100%; font-weight: bold; display: none;">Processing ...</span>
-                                </div>
+                            
+                                <main class="wrapper" style="padding-top:2em">
+
+                                    <div>
+                                      <button class="button" id="startButton">Start</button>
+                                      <button class="button" id="resetButton">Reset</button>
+                                    </div>
+                              
+                                    <div>
+                                      <video id="video" width="300" height="200" style="border: 1px solid gray"></video>
+                                    </div>
+                              
+                                    <div id="sourceSelectPanel" style="display:none">
+                                      <label for="sourceSelect">Change video source:</label>
+                                      <select id="sourceSelect" style="max-width:400px">
+                                      </select>
+                                    </div>
+                              
+                                    <div style="display: table">
+                                      <label for="decoding-style"> Decoding Style:</label>
+                                      <select id="decoding-style" size="1">
+                                        <option value="once">Decode once</option>
+                                        <option value="continuously">Decode continuously</option>
+                                      </select>
+                                    </div>
+                              
+                                    <label>Result:</label>
+                                    <pre><code id="result"></code></pre>
+                              
+                                  </section>
+                              
+                                </main>
+
                             </div>
                         </div>
                     </div>
@@ -153,80 +181,103 @@
             </div>
         </div>
     </div>
-    <main class="wrapper" style="padding-top:2em">
 
-        <section class="container" id="demo-content">
-            <h1 class="title">Scan barcode from Video Camera</h1>
+<script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
+<script type="text/javascript">
+    function decodeOnce(codeReader, selectedDeviceId) {
+    codeReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) => {
+        console.log(result)
+        document.getElementById('result').textContent = result.text
+    }).catch((err) => {
+        console.error(err)
+        document.getElementById('result').textContent = err
+    })
+    }
 
-            <div>
-                <button class="button" id="startButton">Start</button>
-                <button class="button" id="resetButton">Reset</button>
-            </div>
+    function decodeContinuously(codeReader, selectedDeviceId) {
+    codeReader.decodeFromInputVideoDeviceContinuously(selectedDeviceId, 'video', (result, err) => {
+        if (result) {
+        // properly decoded qr code
+        console.log('Found QR code!', result)
+        document.getElementById('result').textContent = result.text
+        }
 
-            <div>
-                <video id="video" width="600" height="400" style="border: 1px solid gray"></video>
-            </div>
+        if (err) {
+        // As long as this error belongs into one of the following categories
+        // the code reader is going to continue as excepted. Any other error
+        // will stop the decoding loop.
+        //
+        // Excepted Exceptions:
+        //
+        //  - NotFoundException
+        //  - ChecksumException
+        //  - FormatException
 
-            <div id="sourceSelectPanel" style="display:none">
-                <label for="sourceSelect">Change video source:</label>
-                <select id="sourceSelect" style="max-width:400px">
-                </select>
-            </div>
+        if (err instanceof ZXing.NotFoundException) {
+            console.log('No QR code found.')
+        }
 
-            <label>Result:</label>
-            <blockquote>
-                <p id="result"></p>
-            </blockquote>
-        </section>
-    </main>
+        if (err instanceof ZXing.ChecksumException) {
+            console.log('A code was found, but it\'s read value was not valid.')
+        }
 
-    <script type="text/javascript" src="https://unpkg.com/@zxing/library@dev"></script>
-    <script type="text/javascript">
-        window.addEventListener('load', function () {
-            const codeReader = new ZXing.BrowserBarcodeReader()
-            console.log('ZXing code reader initialized')
-            codeReader.getVideoInputDevices()
-                .then((videoInputDevices) => {
-                    const sourceSelect = document.getElementById('sourceSelect')
-                    videoInputDevices.forEach((element) => {
-                      const sourceOption = document.createElement('option')
-                      sourceOption.text = element.label
-                      sourceOption.value = element.deviceId
-                      sourceSelect.appendChild(sourceOption)
-                    });
-                    sourceSelect.selectedIndex = 0;
+        if (err instanceof ZXing.FormatException) {
+            console.log('A code was found, but it was in a invalid format.')
+        }
+        }
+    })
+    }
 
-                    if (videoInputDevices.length > 1) {
-                        const sourceSelectPanel = document.getElementById('sourceSelectPanel')
-                        sourceSelectPanel.style.display = 'block'
-                    }
+    window.addEventListener('load', function () {
+    let selectedDeviceId;
+    const codeReader = new ZXing.BrowserQRCodeReader()
+    console.log('ZXing code reader initialized')
 
-                    document.getElementById('startButton').addEventListener('click', () => {
-                        const sourceSelect = document.getElementById('sourceSelect')
-                        const devideId = sourceSelect[sourceSelect.selectedIndex].value
-                        codeReader.decodeFromInputVideoDevice(devideId, 'video').then((result) => {
-                            console.log(result)
-                            document.getElementById('result').textContent = result.text
-                        }).catch((err) => {
-                            console.error(err)
-                            document.getElementById('result').textContent = err
-                        })
-                        console.log(`Started continous decode from camera with id ${firstDeviceId}`)
-                    })
+    codeReader.getVideoInputDevices()
+        .then((videoInputDevices) => {
+        const sourceSelect = document.getElementById('sourceSelect')
+        selectedDeviceId = videoInputDevices[0].deviceId
+        if (videoInputDevices.length >= 1) {
+            videoInputDevices.forEach((element) => {
+            const sourceOption = document.createElement('option')
+            sourceOption.text = element.label
+            sourceOption.value = element.deviceId
+            sourceSelect.appendChild(sourceOption)
+            })
 
-                    document.getElementById('resetButton').addEventListener('click', () => {
-                        document.getElementById('result').textContent = '';
-                        codeReader.reset();
+            sourceSelect.onchange = () => {
+            selectedDeviceId = sourceSelect.value;
+            };
 
-                        console.log('Reset.')
-                    })
+            const sourceSelectPanel = document.getElementById('sourceSelectPanel')
+            sourceSelectPanel.style.display = 'block'
+        }
 
-                })
-                .catch((err) => {
-                    console.error(err)
-                })
+        document.getElementById('startButton').addEventListener('click', () => {
+
+            const decodingStyle = document.getElementById('decoding-style').value;
+
+            if (decodingStyle == "once") {
+            decodeOnce(codeReader, selectedDeviceId);
+            } else {
+            decodeContinuously(codeReader, selectedDeviceId);
+            }
+
+            console.log(`Started decode from camera with id ${selectedDeviceId}`)
         })
-    </script>
+
+        document.getElementById('resetButton').addEventListener('click', () => {
+            codeReader.reset()
+            document.getElementById('result').textContent = '';
+            console.log('Reset.')
+        })
+
+        })
+        .catch((err) => {
+        console.error(err)
+        })
+    })
+</script>
 
 </body>
 
