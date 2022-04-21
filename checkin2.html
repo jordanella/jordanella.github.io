@@ -25,7 +25,6 @@
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jsqr@1.1.1/dist/jsQR.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://unpkg.com/@zxing/library@dev"></script>
 </head>
 
 <body>
@@ -47,7 +46,7 @@
                             </div>
                             <div id="status">Waiting for camera...</div>
                             <div name="pane-webcam" style="height: 100%; position: relative;">
-                                <video name="video" autoplay style="border-radius: 5px; z-index: 9999;" id="video"></video>
+                                <video name="video" autoplay style="border-radius: 5px; z-index: 9999;" id="cam_holder"></video>
                                 <canvas name="canvas" style="display: none;"></canvas>
                                 <div>
                                     <span name="lbl-processing" style="background: navy; color: white; padding: 4px; min-width:100%; font-weight: bold; display: none;">Processing ...</span>
@@ -180,6 +179,55 @@
             </blockquote>
         </section>
     </main>
+
+    <script type="text/javascript" src="https://unpkg.com/@zxing/library@dev"></script>
+    <script type="text/javascript">
+        window.addEventListener('load', function () {
+            const codeReader = new ZXing.BrowserBarcodeReader()
+            console.log('ZXing code reader initialized')
+            codeReader.getVideoInputDevices()
+                .then((videoInputDevices) => {
+                    const sourceSelect = document.getElementById('sourceSelect')
+                    videoInputDevices.forEach((element) => {
+                      const sourceOption = document.createElement('option')
+                      sourceOption.text = element.label
+                      sourceOption.value = element.deviceId
+                      sourceSelect.appendChild(sourceOption)
+                    });
+                    sourceSelect.selectedIndex = 0;
+
+                    if (videoInputDevices.length > 1) {
+                        const sourceSelectPanel = document.getElementById('sourceSelectPanel')
+                        sourceSelectPanel.style.display = 'block'
+                    }
+
+                    document.getElementById('startButton').addEventListener('click', () => {
+                        const sourceSelect = document.getElementById('sourceSelect')
+                        const devideId = sourceSelect[sourceSelect.selectedIndex].value
+                        codeReader.decodeFromInputVideoDevice(devideId, 'video').then((result) => {
+                            console.log(result)
+                            document.getElementById('result').textContent = result.text
+                        }).catch((err) => {
+                            console.error(err)
+                            document.getElementById('result').textContent = err
+                        })
+                        console.log(`Started continous decode from camera with id ${firstDeviceId}`)
+                    })
+
+                    document.getElementById('resetButton').addEventListener('click', () => {
+                        document.getElementById('result').textContent = '';
+                        codeReader.reset();
+
+                        console.log('Reset.')
+                    })
+
+                })
+                .catch((err) => {
+                    console.error(err)
+                })
+        })
+    </script>
+    
 </body>
 
 <script type="text/javascript">
@@ -241,30 +289,30 @@
         $('#modalTitle').html('QR Code Scanner');
         $('.modal-footer').css('display', 'none');
 
-        //qrcodeScanner.open((err, result) => {
+        qrcodeScanner.open((err, result) => {
 
-        //    $('#qrcode-scanner').css('display','none');
+            $('#qrcode-scanner').css('display','none');
 
-        //    var id = result.data.split(',');
-        //    alert(id[0],id[1])
+            var id = result.data.split(',');
+            alert(id[0],id[1])
 
-        //    if (id[0] == undefined) {
+            if (id[0] == undefined) {
 
-        //        toastPopup('The QR code did not match the expected format.','danger');
+                toastPopup('The QR code did not match the expected format.','danger');
 
-        //    } else {
+            } else {
 
-        //        $('#search-bar').val(id[0]);
-        //        doFilter(id[0].toLowerCase());
-        //        $("button[data-value='" + id[0] + "'").click();
-        //        print_show(id[0]);
-        //        $('#print-control').show();
+                $('#search-bar').val(id[0]);
+                doFilter(id[0].toLowerCase());
+                $("button[data-value='" + id[0] + "'").click();
+                print_show(id[0]);
+                $('#print-control').show();
 
-		//    }
+		    }
 
-        //    $('.close').click();
+            $('.close').click();
 
-        //});
+        });
 
     });
 
@@ -316,50 +364,8 @@
         $('#selected-attendee').hide();
     });
 
-    window.addEventListener('load', function () {
-            const codeReader = new ZXing.BrowserBarcodeReader()
-            console.log('ZXing code reader initialized')
-            codeReader.getVideoInputDevices()
-                .then((videoInputDevices) => {
-                    const sourceSelect = document.getElementById('sourceSelect')
-                    videoInputDevices.forEach((element) => {
-                      const sourceOption = document.createElement('option')
-                      sourceOption.text = element.label
-                      sourceOption.value = element.deviceId
-                      sourceSelect.appendChild(sourceOption)
-                    });
-                    sourceSelect.selectedIndex = 0;
 
-                    if (videoInputDevices.length > 1) {
-                        const sourceSelectPanel = document.getElementById('sourceSelectPanel')
-                        sourceSelectPanel.style.display = 'block'
-                    }
 
-                    document.getElementById('scan-button').addEventListener('click', () => {
-                        const sourceSelect = document.getElementById('sourceSelect')
-                        const devideId = sourceSelect[sourceSelect.selectedIndex].value
-                        codeReader.decodeFromInputVideoDevice(devideId, 'video').then((result) => {
-                            console.log(result)
-                            document.getElementById('result').textContent = result.text
-                        }).catch((err) => {
-                            console.error(err)
-                            document.getElementById('result').textContent = err
-                        })
-                        console.log(`Started continous decode from camera with id ${firstDeviceId}`)
-                    })
-
-                    document.getElementById('resetButton').addEventListener('click', () => {
-                        document.getElementById('result').textContent = '';
-                        codeReader.reset();
-
-                        console.log('Reset.')
-                    })
-
-                })
-                .catch((err) => {
-                    console.error(err)
-                })
-        })
 </script> 
 
 <footer class="container-fluid">
