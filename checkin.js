@@ -1,4 +1,7 @@
-var data = [
+
+
+
+/*var data = [
     {
         "id": "10898",
         "name": "Jordan Ella",
@@ -64,13 +67,13 @@ var data = [
         "dietary": "",
         "type": "Speaker"
     }
-];
+];*/
 
 function print_show(ticket) {
 
     $('#selected-attendee').show();
 
-    var selected = data.find(row => row.uid == ticket);
+    var selected = table.find(row => row.uid == ticket);
 
     $('#print-name').html(selected.name);
     $('#print-role').html(selected.role);
@@ -95,27 +98,47 @@ function print_show(ticket) {
 
 };
 
+var table = [];
+
 function fill_table() {
+    $('#search-bar').attr('disabled', true);
+
+    var fetched_data = "";
+    
+    fetch('https://checkin.siberxchange.live/get-all-users')
+        .then(response => response.json())
+        .then(data => {
+            fetched_data = data;
+            fetched_data.forEach(row => {
+                var working = { 'id': row[1], 'type': row[2], 'uid': row[3], 'name': row[4], 'code': row[5], 'work_email': row[6], 'role': row[7], 'org': row[8], 'email': row[9], 'dietary': row[10], 'shirt': row[11], 'checked': row[12] };
+                table.push(working);
+            });
+
+    console.log(table);
 
     var tbody = $('#tbody');
 
-    for (var i = 0; i < data.length; i++) {  
+    for (var i = 0; i < table.length; i++) {  
 
-        if (data[i]["checked"] == "False") {
+        if (table[i]["checked"] == "0") {
             var labelString = "primary'>Registered";
         } else {
             var labelString = "success'>Checked-in";
         }
 
-        tbody.append("<tr><td style='width: 100px;'><span data-value='" + data[i].uid 
+        tbody.append("<tr><td style='width: 100px;'><span data-value='" + table[i].uid 
         + "'class='badge badge-" + labelString 
-        + "</span></td><td class='col-2'>" + data[i].name 
-        + "</td><td class='col-2'>" + data[i].role 
-        + "</td><td class='col-2'>" + data[i].org 
-        + "</td><td class='col-2'>" + data[i].email 
-        + "</td><td class='col-2'>" + data[i].work_email 
-        + "</td><td><button type='button' class='btn btn-info select-print' id='select-show' data-value='" + data[i].uid 
-        + "'>Select</button></td><td style='display: none;'>" + data[i].uid + "</td></tr>");
+        + "</span></td><td class='col-2'>" + table[i].name 
+        + "</td><td class='col-2'>" + table[i].role 
+        + "</td><td class='col-2'>" + table[i].org 
+        + "</td><td class='col-2'>" + table[i].email 
+        + "</td><td class='col-2'>" + table[i].work_email 
+        + "</td><td><button type='button' class='btn btn-info select-print' id='select-show' data-value='" + table[i].uid 
+        + "'>Select</button></td><td style='display: none;'>" + table[i].uid + "</td></tr>");
+    
     };
+
+    $('#search-bar').attr('disabled', false);
+});
 
 };

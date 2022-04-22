@@ -123,8 +123,8 @@
                             <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text input-group-field">T-shirt Size</span></div><input id="shirt-field" class="form-control" aria-label="With textarea"></input>
                         </div>
                         <div class="input-group guest-fields">
-                            <div class="input-group-prepend"><span class="input-group-text input-group-field">Ticket Number</span></div><input id="ticket-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
-                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text input-group-field">Security Code</span></div><input id="uid-field" class="form-control" aria-label="With textarea"></input>
+                            <div class="input-group-prepend"><span class="input-group-text input-group-field">Ticket Number</span></div><input id="ticket-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;" disabled></input>
+                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text input-group-field">Security Code</span></div><input id="uid-field" class="form-control" aria-label="With textarea" disabled></input>
                         </div>
                     </div>
                 </div>
@@ -287,7 +287,7 @@
 
 <script type="text/javascript">
 
-    var row_max_count = 5
+    var row_max_count = 10;
 
     function doFilter(value) {
         
@@ -365,7 +365,7 @@
         $('#search-bar').val($(this).attr('data-value'));
         doFilter($(this).attr('data-value').toLowerCase());
 
-        var attendee = data.find(row => row.uid == $(this).attr('data-value'));
+        var attendee = table.find(row => row.uid == $(this).attr('data-value'));
 
         $('#name-field').val(attendee.name);
         $('#type-field').val(attendee.type);
