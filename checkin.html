@@ -21,6 +21,8 @@
 
     <!-- Generate QR -->
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+
+    <!-- Styling -->
     <link rel="stylesheet" href="./stylesheet2.css">
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jsqr@1.1.1/dist/jsQR.min.js"></script>
@@ -62,10 +64,13 @@
         </div>
     </div>
 
-    <!-- Content -->
-    <div class="d-flex align-items-center justify-content-center hidden-print" style="min-width: 100%; height: 140px; background-size: cover; background-image: linear-gradient(to top, #49066c33, #b94bbd33), url('https://wallpaperboat.com/wp-content/uploads/2020/08/08/51893/anime-scenery-01.jpg');">
+    <!-- Header -->
+    <div class="d-flex align-items-center justify-content-center hidden-print" style="margin-bottom: 40px; min-width: 100%; height: 140px; background-size: cover; background-image: linear-gradient(to top, #49066c33, #b94bbd33), url('https://wallpaperboat.com/wp-content/uploads/2020/08/08/51893/anime-scenery-01.jpg');">
         <p class="h1" id="projectAnchor" style="color: #ffffff; text-shadow: 2px 2px 4px #000000;">Canadian Women in Cybersecurity 2022 Check-In</p>
     </div>
+
+    <!-- Content -->
+
     <div class="container-fluid p-5" style="padding-top: 20px !important; padding-bottom: 0px !important; max-width: 1800px;">
         <!-- Cards -->
         <div class="card hidden-print" style="margin-bottom: 20px;">
@@ -301,7 +306,7 @@
     });
 
     $(document).on("click", "#check-in", function(e) {
-        
+
         var checkButton = $(this);
         var badge = $("span[data-value='" + checkButton.attr('data-value') + "'");
         
