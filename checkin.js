@@ -142,3 +142,108 @@ function fill_table() {
 });
 
 };
+
+function checkGuest(security, ticket_id, checked) {
+	
+    $('#check-in').attr('disabled', true);
+
+    jQuery.support.cors = true;
+    $.ajax({
+      url: "https://leadgen.siberxchange.live/check-guest",
+      type: "POST",
+      crossDomain: true,
+      dataType: "json",
+      data: JSON.stringify({
+        tid: ticket_id,
+        uid: security, //security_code
+        checkedin: checked
+      }),
+      headers: {
+        "accept": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      },
+      method: 'POST',
+      contentType: "application/json; charset=utf-8",
+      success: function(data) {
+
+        var checkButton = $('#check-in');
+        var badge = $("span[data-value='" + checkButton.attr('data-value') + "'");
+        
+        if (badge.hasClass('badge-primary')) {
+            checkButton.addClass('btn-info');
+            checkButton.removeClass('btn-success');
+            checkButton.html('Admitted');
+            toastPopup('Guest successfully checked-in to the conference.','success');
+            badge.html('Checked-in');
+            badge.removeClass('badge-primary');
+            badge.addClass('badge-success');
+        } else {
+            checkButton.removeClass('btn-info');
+            checkButton.addClass('btn-success');
+            checkButton.html('Check-in Guest');
+            toastPopup('Guest check-in status has been revoked.','danger');
+            badge.html('Registered');
+            badge.addClass('badge-primary');
+            badge.removeClass('badge-success');
+        }
+          
+        $('.close').click();
+
+        if (checked == "1") {
+          toastPopup('Guest has been successfully checked in.','success');
+        } else {
+          toastPopup('Guest has been successfully checked out.','success');
+        }
+      },
+
+      error: function (response) {
+        $('.close').click();
+        toastPopup('There was a problem checking in the guest.','danger');
+      }
+      
+    });
+    	
+    $('#check-in').attr('disabled', false);
+
+  }
+
+  function updateGuest(security, ticket_id, name_field, role_field, org_field, email_field, work_email_field, dietary_field, shirt_field) {
+	
+    $('#save-button').attr('disabled', true);
+
+    jQuery.support.cors = true;
+    $.ajax({
+      url: "https://leadgen.siberxchange.live/update_guest",
+      type: "POST",
+      crossDomain: true,
+      dataType: "json",
+      data: JSON.stringify({
+        tid: ticket_id,
+        uid: security, //security_code
+        name: name_field, 
+        role: role_field, 
+        org: org_field, 
+        email: email_field, 
+        work_email: work_email_field,
+        dietary: dietary_field, 
+        shirt: shirt_field
+      }),
+      headers: {
+        "accept": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      },
+      method: 'POST',
+      contentType: "application/json; charset=utf-8",
+      success: function(data) {
+        $('.close').click();
+        toastPopup('Guest has been successfully updated.','success');
+      },
+      error: function (response) {
+        $('.close').click();
+        toastPopup('There was a problem checking in the guest.','danger');
+      }
+    });
+
+    $('#save-button').attr('disabled', false);
+
+  }

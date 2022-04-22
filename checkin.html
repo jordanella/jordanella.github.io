@@ -17,7 +17,7 @@
     <link rel="stylesheet" type="text/css" media="print" href="./checkin.css">
     <script src="checkin.js"></script>
 
-    <script type="text/javascript" src="./QRCodeScanner.js"></script>
+    <script type="text/javascript" src="./toast.js"></script>
 
     <!-- Generate QR -->
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
@@ -108,7 +108,7 @@
                         <h4 style="text-align: left;">Registrant Details</h4>
                         <div class="input-group guest-fields">                        
                             <div class="input-group-prepend"><span class="input-group-text input-group-field">Name</span></div><input id="name-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
-                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text input-group-field">Type</span></div><input id="type-field" class="form-control" aria-label="With textarea"></input>
+                            <div class="input-group-prepend" style="margin-left: 10px;"><span class="input-group-text input-group-field">Type</span></div><input id="type-field" class="form-control" aria-label="With textarea" disabled></input>
                         </div>
                         <div class="input-group guest-fields">
                             <div class="input-group-prepend"><span class="input-group-text input-group-field">Role</span></div><input id="role-field" class="form-control" aria-label="With textarea" style="margin-right: 10px;"></input>
@@ -158,123 +158,69 @@
     </div>
 
 <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
+
 <script type="text/javascript">
     function decodeOnce(codeReader, selectedDeviceId) {
-    codeReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) => {
-        // properly decoded qr code
-        console.log(result);
+        codeReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) => {
+            console.log(result);
 
-        // Ticket Format
-        var id =[];
-        const url = new URL(result);
-        id[0] = url.searchParams.get('security_code');
-        id[1] = url.searchParams.get('ticket_id');
+            // Ticket Format
+            var id =[];
+            const url = new URL(result);
+            id[0] = url.searchParams.get('security_code');
+            id[1] = url.searchParams.get('ticket_id');
 
-        //Created
-        /*
-        var id = result.text.split(',');
-
-        */
-        if (id[1] == undefined) {
-
-            toastPopup('The QR code did not match the expected format.','danger');
-
-        } else {
-
-            $('#search-bar').val(id[0]);
-            doFilter(id[0].toLowerCase());
-
-            if ($('#match_count').html() == "Displaying 1 match.") {
-                $("#select-show[data-value='" + id[0] + "'").click();
-                print_show(id[0]);
+            if (id[1] == undefined) {
+                toastPopup('The QR code did not match the expected format.','danger');
             } else {
-                toastPopup('Could not locate the scanned attendee.','danger');
-                $('#reset-button').click();
+                $('#search-bar').val(id[0]);
+                doFilter(id[0].toLowerCase());
+
+                if ($('#match_count').html() == "Displaying 1 match.") {
+                    $("#select-show[data-value='" + id[0] + "'").click();
+                    print_show(id[0]);
+                } else {
+                    toastPopup('Could not locate the scanned attendee.','danger');
+                    $('#reset-button').click();
+                }
             }
-
-        }
         
-        $('#close-modal').click();
-        codeReader.reset();
+            $('#close-modal').click();
+            codeReader.reset();
 
-    }).catch((err) => {
-        console.error(err)
-    })
-    }
-
-    function decodeContinuously(codeReader, selectedDeviceId) {
-    codeReader.decodeFromInputVideoDeviceContinuously(selectedDeviceId, 'video', (result, err) => {
-        if (result) {
-        // properly decoded qr code
-        console.log('Found QR code!', result)
-        }
-
-        if (err) {
-        // As long as this error belongs into one of the following categories
-        // the code reader is going to continue as excepted. Any other error
-        // will stop the decoding loop.
-        //
-        // Excepted Exceptions:
-        //
-        //  - NotFoundException
-        //  - ChecksumException
-        //  - FormatException
-
-        if (err instanceof ZXing.NotFoundException) {
-            console.log('No QR code found.')
-        }
-
-        if (err instanceof ZXing.ChecksumException) {
-            console.log('A code was found, but it\'s read value was not valid.')
-        }
-
-        if (err instanceof ZXing.FormatException) {
-            console.log('A code was found, but it was in a invalid format.')
-        }
-        }
-    })
+        }).catch((err) => {
+            console.error(err)
+        })
     }
 
     window.addEventListener('load', function () {
-    let selectedDeviceId;
-    const codeReader = new ZXing.BrowserQRCodeReader()
-    console.log('ZXing code reader initialized')
 
-    codeReader.getVideoInputDevices()
-        .then((videoInputDevices) => {
-        const sourceSelect = document.getElementById('sourceSelect')
-        selectedDeviceId = videoInputDevices[0].deviceId
-        if (videoInputDevices.length >= 1) {
-            videoInputDevices.forEach((element) => {
-            const sourceOption = document.createElement('option')
-            sourceOption.text = element.label
-            sourceOption.value = element.deviceId
-            sourceSelect.appendChild(sourceOption)
-            })
+        let selectedDeviceId;
+        const codeReader = new ZXing.BrowserQRCodeReader()
+        console.log('ZXing code reader initialized')
 
-            sourceSelect.onchange = () => {
-            selectedDeviceId = sourceSelect.value;
+        codeReader.getVideoInputDevices().then((videoInputDevices) => {
+            const sourceSelect = document.getElementById('sourceSelect')
+            selectedDeviceId = videoInputDevices[0].deviceId
+            if (videoInputDevices.length >= 1) {
+                videoInputDevices.forEach((element) => {
+                const sourceOption = document.createElement('option')
+                sourceOption.text = element.label
+                sourceOption.value = element.deviceId
+                sourceSelect.appendChild(sourceOption)
+                })
+
+                sourceSelect.onchange = () => {
+                selectedDeviceId = sourceSelect.value;
             };
         }
 
         document.getElementById('startButton').addEventListener('click', () => {
 
-            //const decodingStyle = document.getElementById('decoding-style').value;
-
-            //if (decodingStyle == "once") {
             decodeOnce(codeReader, selectedDeviceId);
-            //} else {
-            //decodeContinuously(codeReader, selectedDeviceId);
-            //}
 
             console.log(`Started decode from camera with id ${selectedDeviceId}`)
         })
-
-        /*document.getElementById('resetButton').addEventListener('click', () => {
-            codeReader.reset()
-            document.getElementById('result').textContent = '';
-            console.log('Reset.')
-        })*/
 
         })
         .catch((err) => {
@@ -322,9 +268,9 @@
 
     }
 
-    fill_table();
-
     $(document).ready(function() {
+
+        fill_table();
         
         doFilter($(this).val().toLowerCase());
         
@@ -333,33 +279,6 @@
         });
 
     });
-
-    //window.qrcodeScanner = new QRCodeScanner({ rootSelector: "#qrcode-scanner" });
-
-    /*    qrcodeScanner.open((err, result) => {
-
-            $('#qrcode-scanner').css('display','none');
-
-            var id = result.data.split(',');
-            alert(id[0],id[1])
-
-            if (id[0] == undefined) {
-
-                toastPopup('The QR code did not match the expected format.','danger');
-
-            } else {
-
-                $('#search-bar').val(id[0]);
-                doFilter(id[0].toLowerCase());
-                $("button[data-value='" + id[0] + "'").click();
-                print_show(id[0]);
-                $('#print-control').show();
-
-		    }
-
-            $('.close').click();
-
-        });*/
 
     $(document).on("click", ".select-print", function(e) {
         $('#search-bar').val($(this).attr('data-value'));
@@ -382,25 +301,17 @@
     });
 
     $(document).on("click", "#check-in", function(e) {
+        
         var checkButton = $(this);
         var badge = $("span[data-value='" + checkButton.attr('data-value') + "'");
+        
         if (badge.hasClass('badge-primary')) {
-            checkButton.addClass('btn-info');
-            checkButton.removeClass('btn-success');
-            checkButton.html('Admitted');
-            toastPopup('Guest successfully checked-in to the conference.','success');
-            badge.html('Checked-in');
-            badge.removeClass('badge-primary');
-            badge.addClass('badge-success');
+            var checking_in = "1";
         } else {
-            checkButton.removeClass('btn-info');
-            checkButton.addClass('btn-success');
-            checkButton.html('Check-in Guest');
-            toastPopup('Guest check-in status has been revoked.','danger');
-            badge.html('Registered');
-            badge.addClass('badge-primary');
-            badge.removeClass('badge-success');
+            var checking_in = "0";
         }
+
+        checkGuest($('#uid-field').val(), $('#ticket-field').val(), checking_in);
     });
 
     $(document).on("click", "#reset-button", function(e) {
@@ -409,7 +320,10 @@
         $('#selected-attendee').hide();
     });
 
-
+    $(document).on("click", "#save-button", function(e) {
+        //function updateGuest(security, ticket_id, name_field, role_field, org_field, email_field, work_email_field, dietary_field, shirt_field)
+        updateGuest($('#uid-field').val(), $('#ticket-field').val(), $('#name-field').val(), $('#role-field').val(),  $('#org-field').val(), $('#email-field').val(),$('#work-field').val(), $('#dietary-field').val(), $('#shirt-field').val());
+    });
 
 </script> 
 
