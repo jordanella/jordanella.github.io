@@ -188,12 +188,6 @@ function checkGuest(security, ticket_id, checked) {
         }
           
         $('.close').click();
-
-        if (checked == 1) {
-          toastPopup('Guest has been successfully checked in.','success');
-        } else {
-          toastPopup('Guest has been successfully checked out.','success');
-        }
       },
 
       error: function (response) {
@@ -210,6 +204,10 @@ function checkGuest(security, ticket_id, checked) {
   function updateGuest(security, ticket_id, name_field, role_field, org_field, email_field, work_email_field, dietary_field, shirt_field) {
 	
     $('#save-button').attr('disabled', true);
+
+    $('#print-name').text(name_field);
+    $('#print-role').text(role_field);
+    $('#print-org').text(org_field);
 
     jQuery.support.cors = true;
     $.ajax({
@@ -240,7 +238,7 @@ function checkGuest(security, ticket_id, checked) {
       },
       error: function (response) {
         $('.close').click();
-        toastPopup('There was a problem checking in the guest.','danger');
+        toastPopup('There was a problem updating the guest.','danger');
       }
     });
 
