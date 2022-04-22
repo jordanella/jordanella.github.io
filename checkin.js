@@ -154,9 +154,9 @@ function checkGuest(security, ticket_id, checked) {
       crossDomain: true,
       dataType: "json",
       data: JSON.stringify({
-        tid: ticket_id,
-        uid: security, //security_code
-        checkedin: checked
+        uid: ticket_id,
+        token: security, //security_code
+        checkedin: checked // 1 or 0
       }),
       headers: {
         "accept": "application/json",
@@ -189,7 +189,7 @@ function checkGuest(security, ticket_id, checked) {
           
         $('.close').click();
 
-        if (checked == "1") {
+        if (checked == 1) {
           toastPopup('Guest has been successfully checked in.','success');
         } else {
           toastPopup('Guest has been successfully checked out.','success');
@@ -200,7 +200,7 @@ function checkGuest(security, ticket_id, checked) {
         $('.close').click();
         toastPopup('There was a problem checking in the guest.','danger');
       }
-      
+
     });
     	
     $('#check-in').attr('disabled', false);
@@ -218,8 +218,8 @@ function checkGuest(security, ticket_id, checked) {
       crossDomain: true,
       dataType: "json",
       data: JSON.stringify({
-        tid: ticket_id,
-        uid: security, //security_code
+        uid: ticket_id,
+        token: security, //security_code
         name: name_field, 
         role: role_field, 
         org: org_field, 

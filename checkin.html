@@ -311,9 +311,9 @@
         var badge = $("span[data-value='" + checkButton.attr('data-value') + "'");
         
         if (badge.hasClass('badge-primary')) {
-            var checking_in = "1";
+            var checking_in = 1;
         } else {
-            var checking_in = "0";
+            var checking_in = 0;
         }
 
         checkGuest($('#uid-field').val(), $('#ticket-field').val(), checking_in);
