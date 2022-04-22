@@ -193,8 +193,16 @@
 </script>
 
   <script type="text/javascript">
+
     const this_url = new URL(window.location.href);
     var vendor_id = this_url.searchParams.get('vendorID');
+    if (vendor_id == undefined) {
+      $('#vendor_code_display').text("Error: No security code detected.");
+    } else {
+      $('#vendor_code_display').text(vendor_id);
+    }
+    
+    console.log("222" + vendor_id)
     
     function startProcess(security, ticket_id, comment) {
 	
