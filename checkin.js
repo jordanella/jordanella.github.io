@@ -149,7 +149,7 @@ function checkGuest(security, ticket_id, checked) {
 
     jQuery.support.cors = true;
     $.ajax({
-      url: "https://leadgen.siberxchange.live/check-guest",
+      url: "https://leadgen.siberxchange.live/user-check-in",
       type: "POST",
       crossDomain: true,
       dataType: "json",

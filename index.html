@@ -216,10 +216,10 @@
         crossDomain: true,
 		dataType: "json",
         data: JSON.stringify({
-		  tid: ticket_id,
-          uid: security, //security_code
+		      uid: ticket_id,
+          token: security, //security_code
           vendorID: vendor_id, //vendor_id
-		  comments: comment
+		      comment: comment
         }),
         headers: {
           "accept": "application/json",
