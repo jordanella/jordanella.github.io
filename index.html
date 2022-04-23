@@ -177,6 +177,10 @@
             const sourceOption = document.createElement('option')
             sourceOption.text = element.label
             sourceOption.value = element.deviceId
+            if (element.label.includes('back')) {
+              sourceSelect.value('element.deviceId');
+              selectedDeviceId = sourceSelect.value;
+            }
             sourceSelect.appendChild(sourceOption)
             })
 
