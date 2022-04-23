@@ -98,7 +98,7 @@
         <p>To ensure your results are recorded properly, ensure that the security code below matches the one you recieved in your lead generation email.</p>
 
         <div class="container" style="margin: 20px;">
-            <div id="vendor_code_display" style="font-size: 20px; font-weight: bold; display: inline-flex; vertical-align: middle; margin-left: 20px;">fsd7fdsai</div>
+            <div id="vendor_code_display" style="font-size: 20px; font-weight: bold; display: inline-flex; vertical-align: middle; margin-left: 20px;"> </div>
         </div>
 
         <p>To capture a new lead, use the button below to begin scanning a QR Code. Once you have added any optional comments, press Submit and your lead will be recorded. Your captured lead information will be immediately reflected on the spreadsheet supplied in your lead generation email.</p>
@@ -177,7 +177,7 @@
             const sourceOption = document.createElement('option')
             sourceOption.text = element.label
             sourceOption.value = element.deviceId
-            if (element.label.includes('back')) {
+            if (element.label.includes('Camera')) {
               sourceSelect.value(element.deviceId);
               selectedDeviceId = sourceSelect.value;
             }
