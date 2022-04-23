@@ -174,14 +174,14 @@
         selectedDeviceId = videoInputDevices[0].deviceId
         if (videoInputDevices.length >= 1) {
             videoInputDevices.forEach((element) => {
-            const sourceOption = document.createElement('option')
-            sourceOption.text = element.label
-            sourceOption.value = element.deviceId
-            if (element.label.includes('Camera')) {
-              sourceSelect.value(element.deviceId);
-              selectedDeviceId = sourceSelect.value;
-            }
-            sourceSelect.appendChild(sourceOption)
+              const sourceOption = document.createElement('option');
+              sourceOption.text = element.label;
+              sourceOption.value = element.deviceId;
+              if (element.label.includes('Camera')) {
+                sourceSelect.value = element.deviceId;
+                selectedDeviceId = sourceSelect.value;
+              }
+              sourceSelect.appendChild(sourceOption);
             })
 
             sourceSelect.onchange = () => {
