@@ -36,7 +36,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="scanModal" tabindex="-1" role="dialog" aria-labelledby="scanModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document" style="width: 500px !important; margin: auto;">
+  <div class="modal-dialog modal-dialog-centered" role="document" style="margin: auto;">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalTitle">QR Code Scanner</h5>
@@ -47,12 +47,12 @@
       <div class="modal-body">
 		    <div id="qrcode-scanner">
           <div style="top: 0px; width: 100%; margin: auto; position: relative;">
-            <div class="circle-loader" style="position: absolute; top: 40px; left: 175px; margin: auto;" id="circ">
+            <div class="circle-loader" style="position: absolute; top: 90px; margin: auto;" id="circ">
               <div class="checkmark draw"></div>
             </div>
-            <div id="status" style="position: absolute; top: 180px;">Waiting for camera...</div>
+            <div id="status" style="position: absolute; top: 230px;">Waiting for camera...</div>
             <div name="pane-webcam" style="height: 100%; position: relative;">
-              <video id="video" width="700" style="min-height: 200px; margin-bottom: 10px; border-radius: 5px;"></video>
+              <video id="video" style="min-height: 340px; margin-bottom: 10px; border-radius: 5px;"></video>
               <div class="input-group" style="margin-bottom: 20px;">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Select Camera</span>
@@ -86,7 +86,7 @@
 </div>
 
 <!-- Content -->
-<div class="container-fluid p-5" style="padding-top: 20px !important; padding-bottom: 0px !important; max-width: 900px; margin-bottom: 20px;">
+<div class="container-fluid p-5" style="padding-top: 20px !important; padding-bottom: 0px !important; max-width: 900px; margin-bottom: 20px; padding-left: 10px !important; padding-right: 10px !important;">
 
   <!-- Cards -->
   <div class="card" style="margin-bottom: 20px;">
@@ -120,6 +120,11 @@
 
 <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
 <script type="text/javascript">
+
+  var win_width = $(window).width();
+  $('.modal-dialog').css('max-width', win_width);
+  $('.modal-dialog').css('width', 700);
+  $('#circ').css('left', ((win_width < 700) ? win_width:700)/2 - 75);
 
   var security = "";
   var ticket_id = "";
