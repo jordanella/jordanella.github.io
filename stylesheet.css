@@ -16,6 +16,26 @@
 	padding:0px;
 }
 
+#qrcode-scanner {
+	top: 0;
+	margin: 0;
+	width: 100%;
+	place-items: center;
+	display: grid;
+  }
+  
+  #qrcode-scanner video {
+  width: 100%;
+	max-width: 100%;
+  }
+  
+  #status {
+	position: absolute;
+	opacity: 0px;
+	width: 100%;
+	top: 250px;
+}
+
 #status {
 	position: absolute;
 	opacity: 0px;
@@ -54,6 +74,7 @@ body {
   //font-size: 18px;
   //place-items: center;
   //background: linear-gradient(315deg, #ffffff, #d7e1ec);
+	text-align: center;
 }
 
 .wrapper {
