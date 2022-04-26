@@ -33,11 +33,12 @@ function print_show(ticket) {
 var table = [];
 
 function fill_table() {
+
     $('#search-bar').attr('disabled', true);
 
     var fetched_data = "";
     
-    fetch('https://checkin.siberxchange.live/get-all-users')
+    fetch('https://conference.siberxchange.live/get-all-proxy')
         .then(response => response.json())
         .then(data => {
             fetched_data = data;
@@ -48,7 +49,7 @@ function fill_table() {
 
     console.log(table);
 
-    var tbody = $('#tbody');
+    var tbody = $('tbody');
 
     for (var i = 0; i < table.length; i++) {  
 
@@ -58,19 +59,20 @@ function fill_table() {
             var labelString = "success'>Checked-in";
         }
 
-        tbody.append("<tr><td  style='vertical-align: middle; width: 100px;'><span data-value='" + table[i].uid 
+        tbody.append("<tr data-value='" + table[i].uid + "'><td  style='vertical-align: middle; width: 100px;'><span data-value='" + table[i].uid 
         + "'class='badge badge-" + labelString 
-        + "</span></td><td class='col-2' style='vertical-align: middle'>" + table[i].name 
-        + "</td><td class='col-2' style='vertical-align: middle'>" + table[i].role 
-        + "</td><td class='col-2' style='vertical-align: middle'>" + table[i].org 
+        + "</span></td><td class='col-2' id='tbl-name' style='vertical-align: middle'>" + table[i].name 
+        + "</td><td class='col-2' id='tbl-role' style='vertical-align: middle'>" + table[i].role 
+        + "</td><td class='col-2' id='tbl-org' style='vertical-align: middle'>" + table[i].org 
         + "</td><td class='col-2' style='vertical-align: middle'>" + table[i].email 
-        + "</td><td class='col-2' style='vertical-align: middle'>" + table[i].work_email 
+        + "</td><td class='col-2' id='tbl-work' style='vertical-align: middle'>" + table[i].work_email 
         + "</td><td style='vertical-align: middle'><button type='button' class='btn btn-info select-print' id='select-show' data-value='" + table[i].uid 
         + "'>Select</button></td><td style='display: none;'>" + table[i].uid + "</td></tr>");
     
     };
 
     $('#search-bar').attr('disabled', false);
+    
 });
 
 };
@@ -143,7 +145,7 @@ function checkGuest(security, ticket_id, checked) {
 
     jQuery.support.cors = true;
     $.ajax({
-      url: "https://leadgen.siberxchange.live/update_guest",
+      url: "https://conference.siberxchange.live/update-user-proxy",
       type: "POST",
       crossDomain: true,
       dataType: "json",
@@ -152,11 +154,9 @@ function checkGuest(security, ticket_id, checked) {
         token: security, //security_code
         name: name_field, 
         role: role_field, 
-        org: org_field, 
-        email: email_field, 
-        work_email: work_email_field,
-        dietary: dietary_field, 
-        shirt: shirt_field
+        organization: org_field, 
+        purchase_email: email_field, 
+        participant_email: work_email_field
       }),
       headers: {
         "accept": "application/json",
@@ -165,11 +165,13 @@ function checkGuest(security, ticket_id, checked) {
       method: 'POST',
       contentType: "application/json; charset=utf-8",
       success: function(data) {
-        $('.close').click();
         toastPopup('Guest has been successfully updated.','success');
+	$("tr[data-value='" + security + "'] > td[id='tbl-name']").text(name_field);
+	$("tr[data-value='" + security + "'] > td[id='tbl-role']").text(role_field);
+	$("tr[data-value='" + security + "'] > td[id='tbl-org']").text(org_field);
+	$("tr[data-value='" + security + "'] > td[id='tbl-work']").text(work_email_field);
       },
       error: function (response) {
-        $('.close').click();
         toastPopup('There was a problem updating the guest.','danger');
       }
     });
