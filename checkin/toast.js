@@ -15,6 +15,7 @@ function toastPopup(content, type) {
 	if (!document.body.contains(toastStack)) {
 		toastStack = document.createElement("div");
 		toastStack.setAttribute("id", "toastStack");
+		toastStack.classList.add("d-print-none");
 		document.body.appendChild(toastStack);
 	}
 

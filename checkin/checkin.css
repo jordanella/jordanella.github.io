@@ -1,12 +1,13 @@
 @media print {
-    .visible-print  { display: flex !important; }
-    .hidden-print   { display: none !important; }
-    #right-col { width: 100% !important; }
-    div {
-      border: 0px !important;
-      padding: 0px !important;
-    }
+  body {
+    margin: 0px !important;
+    padding: 0px !important;
   }
+  div {
+    margin: 0px !important;
+    padding: 0px !important;
+  }
+}
 
 #status {
   position: absolute;
@@ -34,6 +35,10 @@
   display: inline-block;
   vertical-align: top;
   box-sizing: content-box;
+}
+
+td {
+	vertical-align: middle;
 }
 
 .circle-loader,

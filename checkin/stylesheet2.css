@@ -4,10 +4,11 @@
 	width: 100%;
 	place-items: center;
 	display: grid;
+
   }
   
   #qrcode-scanner video {
-  width: 100%;
+  	width: 100%;
 	max-width: 100%;
   }
   

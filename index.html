@@ -253,14 +253,14 @@
 
     $(document).on("click", "#launch", function(e) {
 	
-	  $('.circle-loader').removeClass('load-complete');
-	  $('.checkmark').hide();
-	  $('#submit_button').prop('disabled', true);
-	  $('#modalTitle').html('QR Code Scanner');
-	  $('#comment-form').css('display', 'none');
-	  $('.modal-footer').css('display', 'none');
-    $('#status').html('Waiting for camera...');
-    $('#qrcode-scanner').css('display','flex');
+      $('.circle-loader').removeClass('load-complete');
+      $('.checkmark').hide();
+      $('#submit_button').prop('disabled', true);
+      $('#modalTitle').html('QR Code Scanner');
+      $('#comment-form').css('display', 'none');
+      $('.modal-footer').css('display', 'none');
+      $('#status').html('Waiting for camera...');
+      $('#qrcode-scanner').css('display','flex');
 
     });
 	
@@ -276,6 +276,7 @@
     $('.modal-footer').css('display', 'none');
     $('#status').html('Processing your submission...');
     $('#comments').val('');
+    
 	});
 
 </script>

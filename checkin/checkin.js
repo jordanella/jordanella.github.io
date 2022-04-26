@@ -1,74 +1,3 @@
-
-
-
-/*var data = [
-    {
-        "id": "10898",
-        "name": "Jordan Ella",
-        "email": "jordan@jordanella.com",
-        "work_email": "jordan@jordanella.com",
-        "role": "Media Production Lead",
-        "org": "siberX",
-        "shirt": "XL",
-        "uid": "S27ylES0wiLdFAGdUpFgCQ",
-        "checked": "True",
-        "dietary": "",
-        "type": "Speaker"
-    },
-    {
-        "id": "10898",
-        "name": "Shrey Raval",
-        "email": "shrey@siberx.org",
-        "work_email": "jordan@jordanella.com",
-        "role": "Wizard",
-        "org": "siberX",
-        "shirt": "XL",
-        "uid": "05e26294f3",
-        "checked": "False",
-        "dietary": "Veg",
-        "type": "Speaker"
-    },
-    {
-        "id": "103",
-        "name": "Mahdi Raza",
-        "email": "mahdi@siberx.org",
-        "work_email": "jordan@jordanella.com",
-        "role": "CEO & Founder",
-        "org": "siberX",
-        "shirt": "XL",
-        "uid": "S27ylES0wiLdFAGdUpFgC2",
-        "checked": "True",
-        "dietary": "",
-        "type": "Speaker"
-    },
-    {
-        "id": "104",
-        "name": "Ali Abbas Hirji",
-        "email": "ali.hirji@durhamcollege.ca",
-        "work_email": "jordan@jordanella.com",
-        "role": "Director, AI & Cyber",
-        "org": "Durham College",
-        "shirt": "XL",
-        "uid": "05e629",
-        "checked": "False",
-        "dietary": "",
-        "type": "Speaker"
-    },
-    {
-        "id": "105",
-        "name": "Zainab Zaidi",
-        "email": "zainab@siberx.org",
-        "work_email": "jordan@jordanella.com",
-        "role": "Director, Marketing",
-        "org": "siberX",
-        "shirt": "XL",
-        "uid": "05e263",
-        "checked": "False",
-        "dietary": "",
-        "type": "Speaker"
-    }
-];*/
-
 function print_show(ticket) {
 
     $('#selected-attendee').show();
@@ -92,9 +21,12 @@ function print_show(ticket) {
         $('#check-in').html('Admitted');
     }
 
+    $('#nametag-view').show();
+
     $('#qrcode').html("");
     //new QRCode(document.getElementById("qrcode"), "https://www.siberx.org/?event_qr_code=1&ticket_id=" + selected.id + "&event_id=9718&security_code=" + selected.uid);
     new QRCode(document.getElementById("qrcode"), selected.uid + "," + selected.id);
+    $('div#qrcode > img').css({"width": "100%", "object-fit": "contain"});
 
 };
 
@@ -126,14 +58,14 @@ function fill_table() {
             var labelString = "success'>Checked-in";
         }
 
-        tbody.append("<tr><td style='width: 100px;'><span data-value='" + table[i].uid 
+        tbody.append("<tr><td  style='vertical-align: middle; width: 100px;'><span data-value='" + table[i].uid 
         + "'class='badge badge-" + labelString 
-        + "</span></td><td class='col-2'>" + table[i].name 
-        + "</td><td class='col-2'>" + table[i].role 
-        + "</td><td class='col-2'>" + table[i].org 
-        + "</td><td class='col-2'>" + table[i].email 
-        + "</td><td class='col-2'>" + table[i].work_email 
-        + "</td><td><button type='button' class='btn btn-info select-print' id='select-show' data-value='" + table[i].uid 
+        + "</span></td><td class='col-2' style='vertical-align: middle'>" + table[i].name 
+        + "</td><td class='col-2' style='vertical-align: middle'>" + table[i].role 
+        + "</td><td class='col-2' style='vertical-align: middle'>" + table[i].org 
+        + "</td><td class='col-2' style='vertical-align: middle'>" + table[i].email 
+        + "</td><td class='col-2' style='vertical-align: middle'>" + table[i].work_email 
+        + "</td><td style='vertical-align: middle'><button type='button' class='btn btn-info select-print' id='select-show' data-value='" + table[i].uid 
         + "'>Select</button></td><td style='display: none;'>" + table[i].uid + "</td></tr>");
     
     };
